@@ -1,0 +1,101 @@
+# Ignore file for Visual Studio 2008
+
+# use glob syntax
+syntax: glob
+
+# Ignore Visual Studio 2012 files
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+*.dbmdl
+*.gpState
+*.guidancestate
+*.sln.DotSettings
+UpgradeLog.XML
+UpgradeLog.htm
+_UpgradeReport_Files*/
+[Bb]in
+[Dd]ebug*/
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.orig
+
+# Ignore Visual Studio 2013 files
+*.jmconfig
+
+# Ingore SVN Files
+.svn
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Ignore nuget packages
+*.nupkg
+
+# SQL Server files
+App_Data/*.mdf
+App_Data/*.ldf
+
+# =========================
+# Telerik Rubbish
+# =========================
+_UpgradeWizard_Files*/
+UpgradeWizardLog.xml
+
+# =========================
+# Windows detritus
+# =========================
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac crap
+.DS_Store
+
+# EntityFramework
+EntityFramework.PowerShell.Utility.dll-*
+
+# nCrunuch
+*ncrunch*
+*.ncrunch*
+*.ncrunchproject
+*.ncrunchsolution
+
+# User Settings
+src/.vs/
+applicationhost.config
+*.vspx
+src/Hosts/EMC.Portals.Admin.Web/Content/sass/.sass-cache/
+.sass-cache/
+
+# Packages
+src/packages/
