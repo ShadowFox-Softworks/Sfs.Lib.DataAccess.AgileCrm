@@ -1,8 +1,8 @@
 ﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Responses
 {
     using System;
-    using Entity;
-    using Entity.Internal.Responses;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Responses;
 
     /// <summary>
     /// The Deal Response Entity Resolver

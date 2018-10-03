@@ -5,11 +5,11 @@
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Entity;
-    using Helpers;
-    using Interface.Internal;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Interface.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <inheritdoc />
     internal sealed class HttpClientWrapper : IHttpClient
@@ -20,14 +20,19 @@
         private const string ClassName = nameof(HttpClientWrapper);
 
         /// <summary>
-        /// The lazy client
+        /// The media type
         /// </summary>
-        private static Lazy<HttpClient> lazyHttpClient;
+        private const string MediaType = "application/json";
 
         /// <summary>
-        /// The domain
+        /// The base URI
         /// </summary>
-        private readonly string domain;
+        private readonly string baseUri;
+
+        /// <summary>
+        /// Gets the HTTP client.
+        /// </summary>
+        private readonly HttpClient httpClient;
 
         /// <summary>
         /// The logger
@@ -43,31 +48,19 @@
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] AgileCrmConfiguration agileCrmConfiguration)
         {
-            if (agileCrmConfiguration == null)
-            {
-                throw new ArgumentNullException(nameof(agileCrmConfiguration));
-            }
+            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
+            NullGuard.EnsureNotNull(agileCrmConfiguration, nameof(agileCrmConfiguration));
 
             this.logger = loggerFactory.CreateLogger<HttpClientWrapper>();
-            this.domain = agileCrmConfiguration.Domain;
+            this.baseUri = $"https://{agileCrmConfiguration.Domain}.agilecrm.com/dev/api/";
 
-            if (lazyHttpClient == null)
+            this.httpClient = new HttpClient(new HttpClientHandler
             {
-                var httpClientHandler = new HttpClientHandler
-                {
-                    Credentials = new NetworkCredential(
-                        agileCrmConfiguration.Username,
-                        agileCrmConfiguration.ApiKey)
-                };
-
-                lazyHttpClient = new Lazy<HttpClient>(() => new HttpClient(httpClientHandler));
-            }
+                Credentials = new NetworkCredential(
+                    agileCrmConfiguration.Username,
+                    agileCrmConfiguration.ApiKey)
+            });
         }
-
-        /// <summary>
-        /// Gets the HTTP client.
-        /// </summary>
-        private static HttpClient HttpClient => lazyHttpClient.Value;
 
         /// <inheritdoc />https://{domain}.agilecrm.com
         public async Task<HttpResponseMessage> DeleteAsync(
@@ -80,8 +73,8 @@
             var httpResponseMessage = new HttpResponseMessage();
             try
             {
-                httpResponseMessage = await HttpClient.DeleteAsync(
-                    $"https://{this.domain}.agilecrm.com/{requestUri}", cancellationToken).ConfigureAwait(false);
+                httpResponseMessage = await this.httpClient.DeleteAsync(
+                    $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -103,10 +96,10 @@
             var httpResponseMessage = new HttpResponseMessage();
             try
             {
-                HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                this.httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
 
-                httpResponseMessage = await HttpClient.GetAsync(
-                    $"https://{this.domain}.agilecrm.com/{requestUri}", cancellationToken).ConfigureAwait(false);
+                httpResponseMessage = await this.httpClient.GetAsync(
+                    $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -124,21 +117,23 @@
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.GetAsync);
+            this.logger.MethodStart(ClassName, MethodName);
 
             var httpResponseMessage = new HttpResponseMessage();
             try
             {
-                HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                this.httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
+                this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", MediaType);
 
-                httpResponseMessage = await HttpClient.PostAsync(
-                    $"https://{this.domain}.agilecrm.com/{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
+                httpResponseMessage = await this.httpClient.PostAsync(
+                    $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 this.logger.LogException(e, ClassName, MethodName);
             }
 
+            this.logger.MethodEnd(ClassName, MethodName);
             return httpResponseMessage;
         }
 
@@ -149,23 +144,23 @@
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.GetAsync);
+            this.logger.MethodStart(ClassName, MethodName);
 
             var httpResponseMessage = new HttpResponseMessage();
             try
             {
-                HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+                this.httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
+                this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", MediaType);
 
-                httpResponseMessage = await HttpClient.PutAsync(
-                    $"https://{this.domain}.agilecrm.com/{requestUri}",
-                    stringContent,
-                    cancellationToken).ConfigureAwait(false);
+                httpResponseMessage = await this.httpClient.PutAsync(
+                    $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 this.logger.LogException(e, ClassName, MethodName);
             }
 
+            this.logger.MethodEnd(ClassName, MethodName);
             return httpResponseMessage;
         }
     }

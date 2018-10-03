@@ -1,31 +1,32 @@
 ﻿namespace Osw.Lib.DataAccess.AgileCrm
 {
     using System;
-    using Entity;
-    using Interface;
     using JetBrains.Annotations;
-    using Logic;
-    using Logic.Internal;
-    using Logic.Internal.Processors;
     using Microsoft.Extensions.Logging;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Interface;
+    using Osw.Lib.DataAccess.AgileCrm.Logic;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Processors;
 
     /// <summary>
-    /// The AgileCRM Client Factory
+    /// The AgileCRM Client Factory.
     /// </summary>
     public static class AgileCrmClientFactory
     {
         /// <summary>
-        /// The lazy
+        /// The lazy.
         /// </summary>
         private static readonly Lazy<IAgileCrmClient> Lazy = new Lazy<IAgileCrmClient>(Initialize);
 
         /// <summary>
-        /// The local agile CRM configuration
+        /// The local agile CRM configuration.
         /// </summary>
         private static AgileCrmConfiguration localAgileCrmConfiguration;
 
         /// <summary>
-        /// The local logger factory
+        /// The local logger factory.
         /// </summary>
         private static ILoggerFactory localLoggerFactory;
 
@@ -37,24 +38,12 @@
         /// <returns>
         ///   <see cref="IAgileCrmClient"/>
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// loggerFactory
-        /// or
-        /// agileCrmConfiguration
-        /// </exception>
         public static IAgileCrmClient Create(
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] AgileCrmConfiguration agileCrmConfiguration)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            if (agileCrmConfiguration == null)
-            {
-                throw new ArgumentNullException(nameof(agileCrmConfiguration));
-            }
+            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
+            NullGuard.EnsureNotNull(agileCrmConfiguration, nameof(agileCrmConfiguration));
 
             if (localLoggerFactory == null)
             {
@@ -73,7 +62,7 @@
         /// Initializes this instance.
         /// </summary>
         /// <returns>
-        ///   <see cref="IAgileCrmClient" />
+        ///   <see cref="IAgileCrmClient" />.
         /// </returns>
         private static IAgileCrmClient Initialize()
         {

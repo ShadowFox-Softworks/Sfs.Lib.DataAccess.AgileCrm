@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@
         /// <summary>
         /// Gets or sets the close date.
         /// </summary>
-        [Range(typeof(DateTime), "2018-01-01", "2099-01-01")]
+        [Range(typeof(DateTime), "2000-01-01", "2099-01-01")]
         public DateTime CloseDate { get; set; }
 
         /// <summary>

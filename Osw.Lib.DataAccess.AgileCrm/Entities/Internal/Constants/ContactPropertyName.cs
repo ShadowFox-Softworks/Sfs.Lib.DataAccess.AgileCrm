@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity.Internal.Constants
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Constants
 {
     /// <summary>
     /// The Contact Property Name

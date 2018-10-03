@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity.Internal.Bases
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Bases
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;

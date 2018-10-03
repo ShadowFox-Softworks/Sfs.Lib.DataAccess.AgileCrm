@@ -1,7 +1,7 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity.Internal.Requests
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Requests
 {
     using System.Runtime.Serialization;
-    using Bases;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Bases;
 
     /// <summary>
     /// The Deal Request Entity

@@ -2,7 +2,7 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Entity;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
 
     /// <summary>
     /// The Contact Processor

@@ -3,14 +3,14 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Entity;
-    using Entity.Internal.Responses;
-    using Helpers;
-    using Interface.Internal;
-    using Interface.Internal.Processors;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Responses;
+    using Osw.Lib.DataAccess.AgileCrm.Interface.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Interface.Internal.Processors;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <inheritdoc />
     internal sealed class SearchProcessor : ISearchProcessor
@@ -35,24 +35,12 @@
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="httpClient">The HTTP client.</param>
-        /// <exception cref="ArgumentNullException">
-        /// loggerFactory
-        /// or
-        /// httpClient
-        /// </exception>
         public SearchProcessor(
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] IHttpClient httpClient)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            if (httpClient == null)
-            {
-                throw new ArgumentNullException(nameof(httpClient));
-            }
+            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
+            NullGuard.EnsureNotNull(httpClient, nameof(httpClient));
 
             this.logger = loggerFactory.CreateLogger<SearchProcessor>();
             this.httpClient = httpClient;
@@ -67,14 +55,13 @@
             this.logger.MethodStart(ClassName, MethodName);
 
             var contactId = default(string);
-
-            var uri = $"dev/api/contacts/search/email/{emailAddress}";
-
             try
             {
+                var uri = $"contacts/search/email/{emailAddress}";
+
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                HttpCodeHelper.Check(httpResponseMessage.StatusCode, ClassName);
+                ResponseAnalyzer.Analyse(ProcessorType.Search, httpResponseMessage.StatusCode);
 
                 var httpContentString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -89,14 +76,14 @@
             }
 
             this.logger.MethodEnd(ClassName, MethodName);
+
             return contactId;
         }
 
         /// <inheritdoc />
         public async Task<string> GetDealIdAsync(
             string emailAddress,
-            CancellationToken cancellationToken,
-            AgileCrmDealFilter dealFilter = default(AgileCrmDealFilter))
+            CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.GetDealIdAsync);
             this.logger.MethodStart(ClassName, MethodName);
@@ -113,28 +100,8 @@
             }
 
             this.logger.MethodEnd(ClassName, MethodName);
-        }
 
-        /// <inheritdoc />
-        public async Task<string> GetTrackIdAsync(
-            string trackName,
-            CancellationToken cancellationToken)
-        {
-            const string MethodName = nameof(this.GetTrackIdAsync);
-            this.logger.MethodStart(ClassName, MethodName);
-
-            try
-            {
-                // TODO: GetTrackIdAsync implementation
-                throw new NotImplementedException();
-            }
-            catch (Exception exception)
-            {
-                this.logger.LogException(exception, ClassName, MethodName);
-                throw;
-            }
-
-            this.logger.MethodEnd(ClassName, MethodName);
+            return dealId;
         }
     }
 }

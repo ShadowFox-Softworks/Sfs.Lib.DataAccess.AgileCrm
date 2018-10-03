@@ -1,8 +1,8 @@
 ﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests
 {
     using System;
-    using Entity;
-    using Entity.Internal.Requests;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Requests;
 
     /// <summary>
     /// The Deal Request Entity Resolver

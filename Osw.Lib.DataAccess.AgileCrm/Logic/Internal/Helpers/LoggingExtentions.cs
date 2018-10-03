@@ -17,7 +17,7 @@
         /// <param name="methodName">Name of the method.</param>
         public static void LogException(this ILogger logger, Exception exception, string className, string methodName)
         {
-            logger.LogInformation($"Exception in {className}.{methodName}: {exception}");
+            logger.LogCritical($"AgileCRM exception thrown : {className}.{methodName}: {exception}");
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         /// <param name="methodName">Name of the method.</param>
         public static void MethodEnd(this ILogger logger, string className, string methodName)
         {
-            logger.LogInformation($"Method end: {className}.{methodName}");
+            logger.LogInformation($"AgileCRM method end : {className}.{methodName}");
         }
 
         /// <summary>
@@ -39,7 +39,7 @@
         /// <param name="methodName">Name of the method.</param>
         public static void MethodStart(this ILogger logger, string className, string methodName)
         {
-            logger.LogInformation($"Method start: {className}.{methodName}");
+            logger.LogInformation($"AgileCRM method start : {className}.{methodName}");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

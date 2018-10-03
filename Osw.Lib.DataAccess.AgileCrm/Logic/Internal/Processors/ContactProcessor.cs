@@ -6,16 +6,17 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Entity;
-    using Entity.Internal.Responses;
-    using Helpers;
-    using Interface.Internal;
-    using Interface.Internal.Processors;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using Resolvers.Requests;
-    using Resolvers.Responses;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Responses;
+    using Osw.Lib.DataAccess.AgileCrm.Interface.Internal;
+    using Osw.Lib.DataAccess.AgileCrm.Interface.Internal.Processors;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests;
+    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Responses;
 
     /// <inheritdoc />
     internal sealed class ContactProcessor : IContactProcessor
@@ -57,37 +58,19 @@
         private readonly ISearchProcessor searchProcessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContactProcessor"/> class.
+        /// Initializes a new instance of the <see cref="ContactProcessor" /> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="searchProcessor">The search processor.</param>
         /// <param name="httpClient">The HTTP client.</param>
-        /// <exception cref="ArgumentNullException">
-        /// loggerFactory
-        /// or
-        /// searchProcessor
-        /// or
-        /// httpClient
-        /// </exception>
         public ContactProcessor(
             [NotNull] ILoggerFactory loggerFactory,
             [NotNull] ISearchProcessor searchProcessor,
             [NotNull] IHttpClient httpClient)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            if (searchProcessor == null)
-            {
-                throw new ArgumentNullException(nameof(searchProcessor));
-            }
-
-            if (httpClient == null)
-            {
-                throw new ArgumentNullException(nameof(httpClient));
-            }
+            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
+            NullGuard.EnsureNotNull(searchProcessor, nameof(searchProcessor));
+            NullGuard.EnsureNotNull(httpClient, nameof(httpClient));
 
             this.logger = loggerFactory.CreateLogger<AgileCrmClient>();
             this.searchProcessor = searchProcessor;
@@ -102,8 +85,7 @@
             const string MethodName = nameof(this.CreateContactAsync);
             this.logger.MethodStart(ClassName, MethodName);
 
-            const string Uri = "dev/api/contacts";
-
+            const string Uri = "contacts";
             try
             {
                 var contactRequestEntity = contactEntity.ResolveToCrmRequest();
@@ -115,7 +97,7 @@
                 var httpResponseMessage = await this.httpClient.PostAsync(
                     Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                HttpCodeHelper.Check(httpResponseMessage.StatusCode, ClassName);
+                ResponseAnalyzer.Analyse(ProcessorType.Contact, httpResponseMessage.StatusCode);
             }
             catch (Exception e)
             {
@@ -123,6 +105,7 @@
                 throw;
             }
 
+            this.logger.LogInformation("Contact created in AgileCRM successfully");
             this.logger.MethodEnd(ClassName, MethodName);
         }
 
@@ -139,11 +122,11 @@
                 var contactId = await this.searchProcessor.GetContactIdAsync(emailAddress, cancellationToken)
                     .ConfigureAwait(false);
 
-                var uri = $"dev/api/contacts/{contactId}";
+                var uri = $"contacts/{contactId}";
 
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                HttpCodeHelper.Check(httpResponseMessage.StatusCode, ClassName, HttpStatusCode.NoContent);
+                ResponseAnalyzer.Analyse(ProcessorType.Contact, httpResponseMessage.StatusCode, HttpStatusCode.NoContent);
             }
             catch (Exception e)
             {
@@ -151,6 +134,7 @@
                 throw;
             }
 
+            this.logger.LogInformation("Contact deleted from AgileCRM successfully");
             this.logger.MethodEnd(ClassName, MethodName);
         }
 
@@ -168,11 +152,11 @@
                 var contactId = await this.searchProcessor.GetContactIdAsync(emailAddress, cancellationToken)
                     .ConfigureAwait(false);
 
-                var uri = $"/dev/api/contacts/{contactId}";
+                var uri = $"contacts/{contactId}";
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                HttpCodeHelper.Check(httpResponseMessage.StatusCode, ClassName);
+                ResponseAnalyzer.Analyse(ProcessorType.Contact, httpResponseMessage.StatusCode);
 
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -186,6 +170,7 @@
                 throw;
             }
 
+            this.logger.LogInformation("Contact retrieved from AgileCRM successfully");
             this.logger.MethodEnd(ClassName, MethodName);
 
             return agileCrmContactEntity;
@@ -200,8 +185,7 @@
             const string MethodName = nameof(this.UpdateContactAsync);
             this.logger.MethodStart(ClassName, MethodName);
 
-            const string Uri = "dev/api/contacts/edit-properties";
-
+            const string Uri = "contacts/edit-properties";
             try
             {
                 var contactRequestEntity = contactEntity.ResolveToCrmRequest();
@@ -217,7 +201,7 @@
 
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                HttpCodeHelper.Check(httpResponseMessage.StatusCode, ClassName);
+                ResponseAnalyzer.Analyse(ProcessorType.Contact, httpResponseMessage.StatusCode);
             }
             catch (Exception e)
             {
@@ -225,6 +209,7 @@
                 throw;
             }
 
+            this.logger.LogInformation("Contact updated in AgileCRM successfully");
             this.logger.MethodEnd(ClassName, MethodName);
         }
     }

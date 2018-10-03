@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity.Internal.Constants
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Constants
 {
     /// <summary>
     /// The Contact Property Sub Type
@@ -8,7 +8,7 @@
         /// <summary>
         /// Address Sub Type
         /// </summary>
-        public static class AddressSubType
+        public static class Address
         {
             /// <summary>
             /// Home
@@ -29,7 +29,7 @@
         /// <summary>
         /// Email Sub Type
         /// </summary>
-        public static class EmailSubType
+        public static class Email
         {
             /// <summary>
             /// Personal
@@ -45,7 +45,7 @@
         /// <summary>
         /// Phone Sub Type
         /// </summary>
-        public static class PhoneSubType
+        public static class Phone
         {
             /// <summary>
             /// Home
@@ -86,7 +86,7 @@
         /// <summary>
         /// Website Sub Type
         /// </summary>
-        public static class WebsiteSubType
+        public static class Website
         {
             /// <summary>
             /// Blog
@@ -129,9 +129,9 @@
             public const string Twitter = "TWITTER";
 
             /// <summary>
-            /// Website
+            /// Url
             /// </summary>
-            public const string Website = "URL";
+            public const string Url = "URL";
 
             /// <summary>
             /// Xing

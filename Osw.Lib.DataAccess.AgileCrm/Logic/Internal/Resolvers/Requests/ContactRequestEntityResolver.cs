@@ -1,10 +1,10 @@
 ﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests
 {
     using System.Collections.Generic;
-    using Entity;
-    using Entity.Internal.Bases;
-    using Entity.Internal.Constants;
-    using Entity.Internal.Requests;
+    using Osw.Lib.DataAccess.AgileCrm.Entities;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Bases;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Constants;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Requests;
 
     /// <summary>
     /// The Contact Request Entity Resolver

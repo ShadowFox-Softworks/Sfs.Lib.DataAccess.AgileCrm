@@ -1,7 +1,7 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entity.Internal.Responses
+﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Responses
 {
     using System.Runtime.Serialization;
-    using Bases;
+    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal.Bases;
 
     /// <summary>
     /// The Contact Response Entity
