@@ -1,9 +1,9 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
 {
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Deals;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Deals;
 
     /// <summary>
     /// The Deals Processor.
@@ -25,7 +25,7 @@
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Deletes an existing deal via its unique identifier.
+        /// Deletes an existing deal via its identifier.
         /// </summary>
         /// <param name="dealId">The deal identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -33,11 +33,11 @@
         ///   <see cref="Task" />.
         /// </returns>
         Task DeleteDealAsync(
-            string dealId,
+            long dealId,
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Gets all existing deals related to a contact via their email address.
+        /// Gets all existing deal(s) related to a contact via their email address.
         /// </summary>
         /// <param name="emailAddress">The email address.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -49,7 +49,7 @@
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Updates an existing deal via its unique identifier.
+        /// Updates an existing deal via its identifier.
         /// </summary>
         /// <param name="dealId">The deal identifier.</param>
         /// <param name="agileCrmClientDealEntity">The AgileCRM client deal entity.</param>
@@ -58,7 +58,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         Task UpdateDealAsync(
-            string dealId,
+            long dealId,
             AgileCrmClientDealEntity agileCrmClientDealEntity,
             CancellationToken cancellationToken);
     }

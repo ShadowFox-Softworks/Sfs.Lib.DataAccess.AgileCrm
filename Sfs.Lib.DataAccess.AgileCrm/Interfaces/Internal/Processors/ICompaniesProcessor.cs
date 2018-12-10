@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,19 +22,19 @@
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Deletes an existing company via its unique identifier.
+        /// Deletes an existing company via its identifier.
         /// </summary>
         /// <param name="companyId">The company identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>
         ///   <see cref="Task" />.
         /// </returns>
-        Task DeleteContactAsync(
-            string companyId,
+        Task DeleteConpanyAsync(
+            long companyId,
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Gets an existing company related to a contact via their email address.
+        /// Gets an existing company via their name.
         /// </summary>
         /// <param name="companyId">The company identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -42,11 +42,11 @@
         ///   <see cref="Task{TResult}" />.
         /// </returns>
         Task<AgileCrmServerCompanyEntity> GetCompanyAsync(
-            string companyId,
+            long companyId,
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Updates an existing company via its unique identifier.
+        /// Updates an existing company via its identifier.
         /// </summary>
         /// <param name="companyId">The company identifier.</param>
         /// <param name="agileCrmClientCompanyEntity">The agile CRM client company entity.</param>
@@ -55,7 +55,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         Task UpdateCompanyAsync(
-            string companyId,
+            long companyId,
             AgileCrmClientCompanyEntity agileCrmClientCompanyEntity,
             CancellationToken cancellationToken);
     }

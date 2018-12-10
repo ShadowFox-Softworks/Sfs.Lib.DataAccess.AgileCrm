@@ -1,44 +1,27 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Processors
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Processors
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Net.Http;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Deals;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Deals;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Internal;
+    using Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal;
+    using Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests;
 
     /// <inheritdoc />
-    internal sealed class DealProcessor : IDealsProcessor
+    internal sealed class DealsProcessor : IDealsProcessor
     {
         /// <summary>
         /// The class name.
         /// </summary>
-        private const string ClassName = nameof(DealProcessor);
-
-        /// <summary>
-        /// The media type.
-        /// </summary>
-        private const string MediaType = "application/json";
-
-        /// <summary>
-        /// The encoding type.
-        /// </summary>
-        private static readonly Encoding EncodingType = Encoding.UTF8;
-
-        /// <summary>
-        /// The serializer settings.
-        /// </summary>
-        private static readonly JsonSerializerSettings SerializerSettings =
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+        private const string ClassName = nameof(DealsProcessor);
 
         /// <summary>
         /// The HTTP client.
@@ -51,16 +34,16 @@
         private readonly ILogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DealProcessor" /> class.
+        /// Initializes a new instance of the <see cref="DealsProcessor" /> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="httpClient">The HTTP client.</param>
-        public DealProcessor(
+        public DealsProcessor(
             ILoggerFactory loggerFactory,
             IHttpClient httpClient)
         {
-            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
-            NullGuard.EnsureNotNull(httpClient, nameof(httpClient));
+            loggerFactory.EnsureNotNull();
+            httpClient.EnsureNotNull();
 
             this.logger = loggerFactory.CreateLogger<AgileCrmClient>();
             this.httpClient = httpClient;
@@ -73,27 +56,30 @@
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.CreateDealAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            this.logger.LogMethodStart(ClassName, MethodName);
 
+            var dealId = default(string);
             try
             {
                 var validationContext = new ValidationContext(agileCrmClientDealEntity);
 
                 Validator.ValidateObject(agileCrmClientDealEntity, validationContext, true);
 
-                var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerEntity();
+                var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerDealEntity();
 
-                var serializedEntity = JsonConvert.SerializeObject(agileCrmServerDealEntity, SerializerSettings);
+                var serializedEntity = JsonConvert.SerializeObject(agileCrmServerDealEntity, ProcessorFields.SerializerSettings);
 
                 var uri = $"opportunity/email/{emailAddress}";
 
-                var stringContent = new StringContent(serializedEntity, EncodingType, MediaType);
+                var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
                 var httpResponseMessage = await this.httpClient.PostAsync(uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                httpResponseMessage.EnsureSuccessStatusCode();
+                ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
 
-                ResponseAnalyzer.Analyze(ProcessorType.Deal, httpResponseMessage.StatusCode);
+                var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                dealId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
             }
             catch (Exception exception)
             {
@@ -101,17 +87,17 @@
                 throw;
             }
 
-            this.logger.LogInformation("AgileCRM : Deal created successfully.");
-            this.logger.MethodEnd(ClassName, MethodName);
+            this.logger.LogDebug($"AgileCRM : Deal ({dealId}) created successfully.");
+            this.logger.LogMethodEnd(ClassName, MethodName);
         }
 
         /// <inheritdoc />
         public async Task DeleteDealAsync(
-            string dealId,
+            long dealId,
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.DeleteDealAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            this.logger.LogMethodStart(ClassName, MethodName);
 
             try
             {
@@ -119,9 +105,7 @@
 
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                httpResponseMessage.EnsureSuccessStatusCode();
-
-                ResponseAnalyzer.Analyze(ProcessorType.Deal, httpResponseMessage.StatusCode);
+                ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)
             {
@@ -129,8 +113,8 @@
                 throw;
             }
 
-            this.logger.LogInformation("AgileCRM : Deal deleted successfully.");
-            this.logger.MethodEnd(ClassName, MethodName);
+            this.logger.LogDebug($"AgileCRM : Deal ({dealId}) deleted successfully.");
+            this.logger.LogMethodEnd(ClassName, MethodName);
         }
 
         /// <inheritdoc />
@@ -139,7 +123,7 @@
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.GetDealsAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            this.logger.LogMethodStart(ClassName, MethodName);
 
             var agileCrmServerDealEntities = default(List<AgileCrmServerDealEntity>);
             try
@@ -148,9 +132,7 @@
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                httpResponseMessage.EnsureSuccessStatusCode();
-
-                ResponseAnalyzer.Analyze(ProcessorType.Deal, httpResponseMessage.StatusCode);
+                ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
 
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -160,9 +142,7 @@
 
                 httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                httpResponseMessage.EnsureSuccessStatusCode();
-
-                ResponseAnalyzer.Analyze(ProcessorType.Deal, httpResponseMessage.StatusCode);
+                ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
 
                 httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -174,41 +154,40 @@
                 throw;
             }
 
-            this.logger.LogInformation("AgileCRM : Deals retrieved successfully.");
-            this.logger.MethodEnd(ClassName, MethodName);
+            this.logger.LogDebug($"AgileCRM : Deal (multiple) retrieved successfully.");
+            this.logger.LogMethodEnd(ClassName, MethodName);
 
             return agileCrmServerDealEntities;
         }
 
         /// <inheritdoc />
         public async Task UpdateDealAsync(
-            string dealId,
+            long dealId,
             AgileCrmClientDealEntity agileCrmClientDealEntity,
             CancellationToken cancellationToken)
         {
             const string MethodName = nameof(this.UpdateDealAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            this.logger.LogMethodStart(ClassName, MethodName);
 
-            const string Uri = "opportunity/partial-update";
             try
             {
                 var validationContext = new ValidationContext(agileCrmClientDealEntity);
 
                 Validator.ValidateObject(agileCrmClientDealEntity, validationContext, true);
 
-                var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerEntity();
+                var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerDealEntity();
 
                 agileCrmServerDealEntity.Id = dealId;
 
-                var serializedEntity = JsonConvert.SerializeObject(agileCrmServerDealEntity, SerializerSettings);
+                const string Uri = "opportunity/partial-update";
 
-                var stringContent = new StringContent(serializedEntity, EncodingType, MediaType);
+                var serializedEntity = JsonConvert.SerializeObject(agileCrmServerDealEntity, ProcessorFields.SerializerSettings);
+
+                var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                httpResponseMessage.EnsureSuccessStatusCode();
-
-                ResponseAnalyzer.Analyze(ProcessorType.Deal, httpResponseMessage.StatusCode);
+                ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)
             {
@@ -216,8 +195,8 @@
                 throw;
             }
 
-            this.logger.LogInformation("Deal updated in AgileCRM successfully");
-            this.logger.MethodEnd(ClassName, MethodName);
+            this.logger.LogDebug($"AgileCRM : Deal ({dealId}) updated successfully.");
+            this.logger.LogMethodEnd(ClassName, MethodName);
         }
     }
 }

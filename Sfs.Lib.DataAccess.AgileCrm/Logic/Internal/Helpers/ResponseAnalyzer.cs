@@ -1,9 +1,7 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers
 {
-    using System;
     using System.Net;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Exceptions;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Internal;
 
     /// <summary>
     /// The Response Analyzer.
@@ -11,7 +9,7 @@
     internal static class ResponseAnalyzer
     {
         /// <summary>
-        /// Analyzes the AgileCRM response for errors.
+        /// Analyzes the AgileCRM HTTP response for errors.
         /// </summary>
         /// <param name="processorType">Type of the processor.</param>
         /// <param name="httpStatusCode">The HTTP status code.</param>
@@ -21,85 +19,36 @@
             HttpStatusCode httpStatusCode,
             HttpStatusCode omittedHttpStatusCode = default(HttpStatusCode))
         {
-            var message = default(string);
             switch (httpStatusCode)
             {
                 // 200 (OK)
                 case HttpStatusCode.OK:
+                    // Do nothing
                     break;
 
                 // 204 (No Content)
                 case HttpStatusCode.NoContent:
-                    if (omittedHttpStatusCode == HttpStatusCode.NoContent)
-                    {
-                        break;
-                    }
-
-                    switch (processorType)
-                    {
-                        case ProcessorType.Contact:
-                            message = ;
-                            break;
-
-                        case ProcessorType.Deal:
-                            message = ;
-                            break;
-                    }
-
-                    throw new AgileCrmNoContentException(message);
+                    // Throw exception
+                    break;
 
                 // 400 (Bad Request)
                 case HttpStatusCode.BadRequest:
-                    if (omittedHttpStatusCode == HttpStatusCode.BadRequest)
-                    {
-                        break;
-                    }
-
-                    switch (processorType)
-                    {
-                        case ProcessorType.Contact:
-                            message = ;
-                            break;
-
-                        case ProcessorType.Deal:
-                            message = ;
-                            break;
-                    }
-
-                    throw new AgileCrmBadRequestException(message);
+                    // Throw exception
+                    break;
 
                 // 401 (Unauthorized)
                 case HttpStatusCode.Unauthorized:
-                    if (omittedHttpStatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        break;
-                    }
-
-                    message = ExceptionMessage.Unauthorized;
-                    throw new AgileCrmUnauthorizedException(message);
+                    // Throw exception
+                    break;
 
                 // 406 (Not Acceptable)
                 case HttpStatusCode.NotAcceptable:
-                    if (omittedHttpStatusCode == HttpStatusCode.NotAcceptable)
-                    {
-                        break;
-                    }
-
-                    switch (processorType)
-                    {
-                        case ProcessorType.Contact:
-                            message = ;
-                            break;
-
-                        case ProcessorType.Deal:
-                            message = ;
-                            break;
-                    }
-
-                    throw new AgileCrmNotAcceptableException(message);
+                    // Throw exception
+                    break;
 
                 default:
-                    throw new ArgumentOutOfRangeException($"{(int)httpStatusCode} ({httpStatusCode})");
+                    // Throw exception
+                    break;
             }
         }
     }

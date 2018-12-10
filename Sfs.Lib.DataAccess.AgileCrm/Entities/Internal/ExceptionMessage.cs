@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Internal
 {
     /// <summary>
     /// The Exception Message.
@@ -6,22 +6,22 @@
     internal static class ExceptionMessage
     {
         /// <summary>
-        /// Bad request message.
+        /// Bad request exception message.
         /// </summary>
         public const string BadRequest = "400 (Bad Request) : Input in wrong format or entity already exists.";
 
         /// <summary>
-        /// No content message.
+        /// No content exception message.
         /// </summary>
         public const string NoContent = "204 (No Content) : No entity with specified identififer.";
 
         /// <summary>
-        /// Not acceptable message.
+        /// Not acceptable exception message.
         /// </summary>
         public const string NotAcceptable = "406 (Not Acceptable) : The limit of contacts has been exceeded.";
 
         /// <summary>
-        /// Unauthorized message.
+        /// Unauthorized exception message.
         /// </summary>
         public const string Unauthorized = "401 (Unauthorized) : Provided configuration is not authorized.";
     }

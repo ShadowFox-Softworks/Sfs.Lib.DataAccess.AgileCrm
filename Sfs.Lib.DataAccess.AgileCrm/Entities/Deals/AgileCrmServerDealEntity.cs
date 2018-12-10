@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Deals
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Deals
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
@@ -10,57 +10,57 @@
     public sealed class AgileCrmServerDealEntity
     {
         /// <summary>
-        /// Gets or sets the close date.
+        /// Gets or sets the deal's close date.
         /// </summary>
         [DataMember(Name = "close_date", Order = 5)]
-        public string CloseDate { get; set; }
+        public long CloseDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the contact identifier(s).
+        /// Gets or sets the deal's contact identifier.
         /// </summary>
         [DataMember(Name = "contact_ids", Order = 8)]
         public IList<string> ContactId { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom data.
+        /// Gets or sets the deal's custom data.
         /// </summary>
         [DataMember(Name = "custom_data", Order = 9)]
         public IList<AgileCrmServerCustomDataEntity> CustomData { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the deal's identifier.
         /// </summary>
         [DataMember(Name = "id", Order = 1)]
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the milestone.
+        /// Gets or sets the deal's milestone.
         /// </summary>
         [DataMember(Name = "milestone", Order = 7)]
         public string Milestone { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the deal's name.
         /// </summary>
         [DataMember(Name = "name", Order = 2)]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the probability.
+        /// Gets or sets the deal's probability.
         /// </summary>
         [DataMember(Name = "probability", Order = 4)]
-        public string Probability { get; set; }
+        public int Probability { get; set; }
 
         /// <summary>
-        /// Gets or sets the track identifier.
+        /// Gets or sets the deal's track identifier.
         /// </summary>
         [DataMember(Name = "pipeline_id", Order = 6)]
-        public string TrackId { get; set; }
+        public long TrackId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the deal's value.
         /// </summary>
         [DataMember(Name = "expected_value", Order = 3)]
-        public string Value { get; set; }
+        public double Value { get; set; }
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities
 {
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// The AgileCRM Configuration.
     /// </summary>
-    public sealed class AgileCrmConfiguration
+    public class AgileCrmConfiguration
     {
         /// <summary>
         /// Gets or sets the API key.

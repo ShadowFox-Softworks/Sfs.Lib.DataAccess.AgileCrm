@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Interface
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Interface
 {
     /// <summary>
     /// The AgileCRM Client.

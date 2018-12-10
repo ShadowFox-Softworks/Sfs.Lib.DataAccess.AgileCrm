@@ -1,9 +1,9 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Contacts.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Internal
 {
     /// <summary>
-    /// The Contact Property Type.
+    /// The Property Type.
     /// </summary>
-    internal static class ContactPropertyType
+    internal static class PropertyType
     {
         /// <summary>
         /// The custom property type.

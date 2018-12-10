@@ -1,8 +1,8 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Contacts
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Contacts
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Attributes;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Attributes;
 
     /// <summary>
     /// The AgileCRM Client Contact Entity.
@@ -10,87 +10,89 @@
     public class AgileCrmClientContactEntity
     {
         /// <summary>
-        /// Gets or sets the address information.
+        /// Gets or sets the contact's address information.
         /// </summary>
         [Required]
         public AgileCrmClientAddressEntity AddressInformation { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the company.
+        /// Gets or sets the company's name.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Must be between 1 and 50 characters.")]
         public string CompanyName { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom fields.
+        /// Gets or sets the contact's custom fields
+        /// (key must be same as custom field name in AgileCRM).
         /// </summary>
         [Required]
         [StringLengthCollection(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Each item must be between 1 and 50 characters.")]
+        [MinLength(1, ErrorMessage = "Collection must have at least one item.")]
         public IDictionary<string, string> CustomFields { get; set; }
 
         /// <summary>
-        /// Gets or sets the email address.
+        /// Gets or sets the contact's email address.
         /// </summary>
         [Required]
-        [MinLength(1, ErrorMessage = "Collection must have atleast one item.")]
+        [MinLength(1, ErrorMessage = "Collection must have at least one item.")]
         public IList<AgileCrmClientSubTypeEntity> EmailAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the contact's first name.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 25, MinimumLength = 1, ErrorMessage = "Must be between 1 and 25 characters.")]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the contact's last name.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 25, MinimumLength = 1, ErrorMessage = "Must be between 1 and 25 characters.")]
         public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets the lead score.
+        /// Gets or sets the contact's lead score.
         /// </summary>
         [Required]
         [Range(0, 100, ErrorMessage = "Must be between 0 and 100.")]
         public int LeadScore { get; set; }
 
         /// <summary>
-        /// Gets or sets the phone number.
+        /// Gets or sets the contact's phone number.
         /// </summary>
         [Required]
         [MinLength(1, ErrorMessage = "Collection must have atleast one item.")]
         public IList<AgileCrmClientSubTypeEntity> PhoneNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the star value.
+        /// Gets or sets the contact's star value.
         /// </summary>
         [Required]
         [Range(0, 5, ErrorMessage = "Must be between 0 and 5.")]
-        public int StarValue { get; set; }
+        public short StarValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the tags.
+        /// Gets or sets the contact's tags.
         /// </summary>
         [Required]
         [StringLengthCollection(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Each item must be between 1 and 50 characters.")]
-        [MinLength(1, ErrorMessage = "Collection must have atleast one item.")]
+        [MinLength(1, ErrorMessage = "Collection must have at least one item.")]
         public IList<string> Tags { get; set; }
 
         /// <summary>
-        /// Gets or sets the title.
+        /// Gets or sets the contact's title.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 4, MinimumLength = 2, ErrorMessage = "Must be between 2 and 4 characters.")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the website.
+        /// Gets or sets the contact's website.
         /// </summary>
         [Required]
-        [MinLength(1, ErrorMessage = "Collection must have atleast one item.")]
+        [MinLength(1, ErrorMessage = "Collection must have at least one item.")]
         public IList<AgileCrmClientSubTypeEntity> Website { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Exceptions
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Exceptions
 {
     using System;
     using System.Runtime.Serialization;

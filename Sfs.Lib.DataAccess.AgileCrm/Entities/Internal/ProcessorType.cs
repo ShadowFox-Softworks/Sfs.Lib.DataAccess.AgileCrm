@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Internal
 {
     /// <summary>
     /// The Processor Type.
@@ -6,18 +6,23 @@
     internal enum ProcessorType
     {
         /// <summary>
-        /// The search processor type.
+        /// The contacts processor type.
         /// </summary>
-        Search = 1,
+        Contacts = 1,
 
         /// <summary>
-        /// The contact processor type.
+        /// The deals processor type.
         /// </summary>
-        Contact = 2,
+        Deals = 2,
 
         /// <summary>
-        /// The deal processor type.
+        /// The companies processor type.
         /// </summary>
-        Deal = 3
+        Companies = 3,
+
+        /// <summary>
+        /// The notes processor type.
+        /// </summary>
+        Notes = 4
     }
 }

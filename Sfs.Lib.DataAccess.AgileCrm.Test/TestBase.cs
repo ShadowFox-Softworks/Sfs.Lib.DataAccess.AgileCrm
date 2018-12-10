@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Test
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Test
 {
     using System;
     using System.Diagnostics;
@@ -15,9 +15,9 @@
         /// </summary>
         protected TestBase()
         {
-            this.LoggerFactoryBlank = new LoggerFactory();
+            this.LoggerFactoryStub = new LoggerFactory();
 
-            this.LoggerFactoryEnriched = new LoggerFactory().AddSerilog();
+            this.InitializedLoggerFactory = new LoggerFactory().AddSerilog();
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -27,14 +27,14 @@
         }
 
         /// <summary>
-        /// Gets a blank logger factory.
+        /// Gets an initialized logger factory.
         /// </summary>
-        protected ILoggerFactory LoggerFactoryBlank { get; }
+        protected ILoggerFactory InitializedLoggerFactory { get; }
 
         /// <summary>
-        /// Gets an enriched logger factory.
+        /// Gets the stubbed logger factory.
         /// </summary>
-        protected ILoggerFactory LoggerFactoryEnriched { get; }
+        protected ILoggerFactory LoggerFactoryStub { get; }
 
         /// <summary>
         /// Writes the time that was elapsed during the test.

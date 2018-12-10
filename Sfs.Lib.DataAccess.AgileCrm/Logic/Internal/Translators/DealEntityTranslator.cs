@@ -1,7 +1,8 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests
 {
-    using System;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Deals;
+    using System.Collections.Generic;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Deals;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <summary>
     /// The Deal Entity Translator.
@@ -15,10 +16,34 @@
         /// <returns>
         ///   <see cref="AgileCrmServerDealEntity" />.
         /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public static AgileCrmServerDealEntity ToServerEntity(this AgileCrmClientDealEntity agileCrmClientDealEntity)
+        public static AgileCrmServerDealEntity ToServerDealEntity(this AgileCrmClientDealEntity agileCrmClientDealEntity)
         {
-            throw new NotImplementedException();
+            var agileCrmServerCustomDataEntities = new List<AgileCrmServerCustomDataEntity>();
+
+            foreach (var item in agileCrmClientDealEntity.CustomFields)
+            {
+                agileCrmServerCustomDataEntities.Add(
+                    new AgileCrmServerCustomDataEntity
+                    {
+                        Name = item.Key,
+                        Value = item.Value
+                    });
+            }
+
+            var agileCrmServerDealEntity = new AgileCrmServerDealEntity
+            {
+                // AgileCrmServerDealEntity.Id (set in method only).
+                // AgileCrmServerDealEntity.TrackId (retrieved only).
+                // AgileCrmServerDealEntity.ContactId (retrieved only).
+                Name = agileCrmClientDealEntity.Name,
+                CloseDate = agileCrmClientDealEntity.CloseDate.ToEpoch(),
+                Milestone = agileCrmClientDealEntity.Milestone,
+                Probability = agileCrmClientDealEntity.Probability,
+                Value = agileCrmClientDealEntity.Value,
+                CustomData = agileCrmServerCustomDataEntities
+            };
+
+            return agileCrmServerDealEntity;
         }
     }
 }

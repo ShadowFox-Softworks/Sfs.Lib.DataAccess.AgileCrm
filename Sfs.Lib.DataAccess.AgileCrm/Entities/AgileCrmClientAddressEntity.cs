@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -11,31 +11,38 @@
         /// Gets or sets the address.
         /// </summary>
         [Required]
-        public AgileCrmClientSubTypeEntity Address { get; set; }
+        [StringLength(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Must be between 1 and 50 characters.")]
+        public string Address { get; set; }
 
         /// <summary>
-        /// Gets or sets the city.
+        /// Gets or sets the address's city.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Must be between 1 and 50 characters.")]
         public string City { get; set; }
 
         /// <summary>
-        /// Gets or sets the country.
+        /// Gets or sets the address's country.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Must be between 1 and 50 characters.")]
         public string Country { get; set; }
 
         /// <summary>
-        /// Gets or sets the state.
+        /// Gets or sets the address's state.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 50, MinimumLength = 1, ErrorMessage = "Must be between 1 and 50 characters.")]
         public string State { get; set; }
 
         /// <summary>
-        /// Gets or sets the postal/zip.
+        /// Gets or sets the address's sub type.
+        /// </summary>
+        [Required]
+        public AgileCrmClientSubType SubType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the address's postal/zip code.
         /// </summary>
         [Required]
         [StringLength(maximumLength: 10, MinimumLength = 6, ErrorMessage = "Must be between 5 and 10 characters.")]

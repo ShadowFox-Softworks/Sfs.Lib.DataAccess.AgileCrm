@@ -1,26 +1,29 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal
 {
-    using System;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
-    using Osw.Lib.DataAccess.AgileCrm.Entities;
-    using Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities;
+    using Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <inheritdoc />
     internal sealed class HttpClientWrapper : IHttpClient
     {
         /// <summary>
-        /// The class name.
+        /// The HTTP accept header name.
         /// </summary>
-        private const string ClassName = nameof(HttpClientWrapper);
+        private const string Accept = "Accept";
 
         /// <summary>
-        /// The media type.
+        /// The HTTP content type header name.
+        /// </summary>
+        private const string ContentType = "Content-Type";
+
+        /// <summary>
+        /// The HTTP contect media type.
         /// </summary>
         private const string MediaType = "application/json";
 
@@ -45,15 +48,16 @@
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="agileCrmConfiguration">The agile CRM configuration.</param>
         public HttpClientWrapper(
-            [NotNull] ILoggerFactory loggerFactory,
-            [NotNull] AgileCrmConfiguration agileCrmConfiguration)
+            ILoggerFactory loggerFactory,
+            AgileCrmConfiguration agileCrmConfiguration)
         {
-            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
-            NullGuard.EnsureNotNull(agileCrmConfiguration, nameof(agileCrmConfiguration));
+            loggerFactory.EnsureNotNull();
+            agileCrmConfiguration.EnsureNotNull();
 
             this.logger = loggerFactory.CreateLogger<HttpClientWrapper>();
             this.baseUri = $"https://{agileCrmConfiguration.Domain}.agilecrm.com/dev/api/";
 
+            // HttpClient instantiated with AgileCRM account credentials
             httpClient = new HttpClient(new HttpClientHandler
             {
                 Credentials = new NetworkCredential(
@@ -67,23 +71,10 @@
             string requestUri,
             CancellationToken cancellationToken)
         {
-            const string MethodName = nameof(this.DeleteAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            httpClient.DefaultRequestHeaders.Clear();
 
-            var httpResponseMessage = new HttpResponseMessage();
-            try
-            {
-                httpClient.DefaultRequestHeaders.Clear();
-
-                httpResponseMessage = await httpClient.DeleteAsync(
-                    $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogException(e, ClassName, MethodName);
-            }
-
-            this.logger.MethodEnd(ClassName, MethodName);
+            var httpResponseMessage = await httpClient.DeleteAsync(
+                $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
 
             return httpResponseMessage;
         }
@@ -93,24 +84,11 @@
             string requestUri,
             CancellationToken cancellationToken)
         {
-            const string MethodName = nameof(this.GetAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add(Accept, MediaType);
 
-            var httpResponseMessage = new HttpResponseMessage();
-            try
-            {
-                httpClient.DefaultRequestHeaders.Clear();
-                httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
-
-                httpResponseMessage = await httpClient.GetAsync(
-                    $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogException(e, ClassName, MethodName);
-            }
-
-            this.logger.MethodEnd(ClassName, MethodName);
+            var httpResponseMessage = await httpClient.GetAsync(
+                $"{this.baseUri}{requestUri}", cancellationToken).ConfigureAwait(false);
 
             return httpResponseMessage;
         }
@@ -121,25 +99,12 @@
             StringContent stringContent,
             CancellationToken cancellationToken)
         {
-            const string MethodName = nameof(this.GetAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add(Accept, MediaType);
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(ContentType, MediaType);
 
-            var httpResponseMessage = new HttpResponseMessage();
-            try
-            {
-                httpClient.DefaultRequestHeaders.Clear();
-                httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", MediaType);
-
-                httpResponseMessage = await httpClient.PostAsync(
-                    $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogException(e, ClassName, MethodName);
-            }
-
-            this.logger.MethodEnd(ClassName, MethodName);
+            var httpResponseMessage = await httpClient.PostAsync(
+                $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
 
             return httpResponseMessage;
         }
@@ -150,25 +115,12 @@
             StringContent stringContent,
             CancellationToken cancellationToken)
         {
-            const string MethodName = nameof(this.GetAsync);
-            this.logger.MethodStart(ClassName, MethodName);
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add(Accept, MediaType);
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(ContentType, MediaType);
 
-            var httpResponseMessage = new HttpResponseMessage();
-            try
-            {
-                httpClient.DefaultRequestHeaders.Clear();
-                httpClient.DefaultRequestHeaders.Add("Accept", MediaType);
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", MediaType);
-
-                httpResponseMessage = await httpClient.PutAsync(
-                    $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                this.logger.LogException(e, ClassName, MethodName);
-            }
-
-            this.logger.MethodEnd(ClassName, MethodName);
+            var httpResponseMessage = await httpClient.PutAsync(
+                $"{this.baseUri}{requestUri}", stringContent, cancellationToken).ConfigureAwait(false);
 
             return httpResponseMessage;
         }

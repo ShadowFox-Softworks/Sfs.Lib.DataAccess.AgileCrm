@@ -1,13 +1,13 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities
 {
     /// <summary>
     /// The AgileCRM Client Sub Type.
     /// </summary>
     public enum AgileCrmClientSubType
     {
-        // -----------------------------------------------------------------------------------------
-        // Key for corresponding value (ContactPropertySubType) in ContactSubTypeResolver.Repository
-        // -----------------------------------------------------------------------------------------
+        // ------------------------------------------------
+        // Key for corresponding value (PropertySubType.cs)
+        // ------------------------------------------------
 
         /// <summary>
         /// The address property sub type (Home).

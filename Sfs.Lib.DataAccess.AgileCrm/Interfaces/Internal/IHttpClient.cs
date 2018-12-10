@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal
 {
     using System.Net.Http;
     using System.Threading;

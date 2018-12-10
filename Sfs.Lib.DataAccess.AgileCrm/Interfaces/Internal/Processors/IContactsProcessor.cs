@@ -1,8 +1,8 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Contacts;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Contacts;
 
     /// <summary>
     /// The Contacts Processor.
@@ -22,7 +22,7 @@
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Deletes an existing contact via their unique identifier.
+        /// Deletes an existing contact via their identifier.
         /// </summary>
         /// <param name="contactId">The contact identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
@@ -30,7 +30,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         Task DeleteContactAsync(
-            string contactId,
+            long contactId,
             CancellationToken cancellationToken);
 
         /// <summary>
@@ -46,7 +46,7 @@
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Updates an existing contact via their unique identifier.
+        /// Updates an existing contact via their identifier.
         /// </summary>
         /// <param name="contactId">The contact identifier.</param>
         /// <param name="agileCrmClientContactEntity">The AgileCRM client contact entity.</param>
@@ -55,7 +55,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         Task UpdateContactAsync(
-            string contactId,
+            long contactId,
             AgileCrmClientContactEntity agileCrmClientContactEntity,
             CancellationToken cancellationToken);
     }

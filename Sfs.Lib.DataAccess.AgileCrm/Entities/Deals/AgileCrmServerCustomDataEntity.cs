@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Deals
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Deals
 {
     using System.Runtime.Serialization;
 
@@ -9,7 +9,7 @@
     public sealed class AgileCrmServerCustomDataEntity
     {
         /// <summary>
-        /// Gets or sets the field name (as it appears in AgileCRM).
+        /// Gets or sets the field name.
         /// </summary>
         [DataMember(Name = "name", Order = 1)]
         public string Name { get; set; }

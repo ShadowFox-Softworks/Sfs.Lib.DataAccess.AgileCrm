@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Contacts
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Contacts
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;
@@ -10,37 +10,37 @@
     public class AgileCrmServerContactEntity
     {
         /// <summary>
-        /// Gets or sets the company identifier.
+        /// Gets or sets the contact's company identifier.
         /// </summary>
         [DataMember(Name = "contact_company_id", Order = 4)]
-        public string CompanyId { get; set; }
+        public long CompanyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the contact's identifier.
         /// </summary>
         [DataMember(Name = "id", Order = 1)]
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the lead score.
+        /// Gets or sets the contact's lead score.
         /// </summary>
         [DataMember(Name = "lead_score", Order = 3)]
         public int LeadScore { get; set; }
 
         /// <summary>
-        /// Gets or sets the properties.
+        /// Gets or sets the contact's properties.
         /// </summary>
         [DataMember(Name = "properties", Order = 5)]
-        public IList<AgileCrmServerPropertyEntity> Properties { get; set; }
+        public IList<AgileCrmServerPropertyBase> Properties { get; set; }
 
         /// <summary>
-        /// Gets or sets the star value.
+        /// Gets or sets the contact's star value.
         /// </summary>
         [DataMember(Name = "star_value", Order = 2)]
-        public int StarValue { get; set; }
+        public short StarValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the tags.
+        /// Gets or sets the contact's tags.
         /// </summary>
         [DataMember(Name = "tags", Order = 6)]
         public IList<string> Tags { get; set; }

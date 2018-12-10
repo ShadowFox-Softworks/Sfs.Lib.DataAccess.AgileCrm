@@ -1,9 +1,9 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Internal
 {
     /// <summary>
-    /// The General Property Name.
+    /// The Property Name.
     /// </summary>
-    internal static class GeneralPropertyName
+    internal static class PropertyName
     {
         /// <summary>
         /// The address property name.
@@ -16,19 +16,9 @@
         public const string Email = "email";
 
         /// <summary>
-        /// The company name property name.
-        /// </summary>
-        public const string Name = "name";
-
-        /// <summary>
         /// The phone property name.
         /// </summary>
         public const string Phone = "phone";
-
-        /// <summary>
-        /// The URL property name.
-        /// </summary>
-        public const string URL = "url";
 
         /// <summary>
         /// The website property name.

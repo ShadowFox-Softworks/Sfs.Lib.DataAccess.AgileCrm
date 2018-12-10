@@ -1,13 +1,13 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Entities.Contacts.Internal
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Entities.Internal
 {
     /// <summary>
-    /// The Contact Property Sub Type.
+    /// The Property Sub Type.
     /// </summary>
-    internal static class ContactPropertySubType
+    internal static class PropertySubType
     {
-        // ----------------------------------------------------------------------------------------
-        // Value for corresponding key (AgileCrmClientSubType) in ContactSubTypeResolver.Repository
-        // ----------------------------------------------------------------------------------------
+        // ------------------------------------------------------
+        // Value for corresponding key (AgileCrmClientSubType.cs)
+        // ------------------------------------------------------
 
         /// <summary>
         /// The address property sub type (Home).

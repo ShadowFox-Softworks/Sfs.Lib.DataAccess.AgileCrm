@@ -1,11 +1,11 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Translators
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Translators
 {
     using System.Collections.Generic;
-    using Osw.Lib.DataAccess.AgileCrm.Entities;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Contacts;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Contacts.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Entities.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Contacts;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Contacts.Internal;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities.Internal;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <summary>
     /// The Contact Entity Translator.
@@ -19,134 +19,123 @@
         /// <returns>
         ///   <see cref="AgileCrmServerContactEntity" />.
         /// </returns>
-        public static AgileCrmServerContactEntity ToServerEntity(this AgileCrmClientContactEntity agileCrmClientContactEntity)
+        public static AgileCrmServerContactEntity ToServerContactEntity(this AgileCrmClientContactEntity agileCrmClientContactEntity)
         {
-            // TODO: Address stuff
+            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyBase>();
 
-            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyEntity>();
-
-            if (agileCrmClientContactEntity.Title != null)
-            {
-                agileCrmServerPropertyEntities.Add(
-                    new AgileCrmServerPropertyEntity
-                    {
-                        Type = ContactPropertyType.System,
-                        Name = ContactPropertyName.Title,
-                        Value = agileCrmClientContactEntity.Title
-                    });
-            }
-
-            if (agileCrmClientContactEntity.FirstName != null)
-            {
-                agileCrmServerPropertyEntities.Add(
-                    new AgileCrmServerPropertyEntity
-                    {
-                        Type = ContactPropertyType.System,
-                        Name = ContactPropertyName.FirstName,
-                        Value = agileCrmClientContactEntity.FirstName
-                    });
-            }
-
-            if (agileCrmClientContactEntity.LastName != null)
-            {
-                agileCrmServerPropertyEntities.Add(
-                    new AgileCrmServerPropertyEntity
-                    {
-                        Type = ContactPropertyType.System,
-                        Name = ContactPropertyName.LastName,
-                        Value = agileCrmClientContactEntity.LastName
-                    });
-            }
-
-            if (agileCrmClientContactEntity.CompanyName != null)
-            {
-                agileCrmServerPropertyEntities.Add(
-                    new AgileCrmServerPropertyEntity
-                    {
-                        Type = ContactPropertyType.System,
-                        Name = ContactPropertyName.Company,
-                        Value = agileCrmClientContactEntity.CompanyName
-                    });
-            }
-
-            if (agileCrmClientContactEntity.PhoneNumber != null)
-            {
-                foreach (var item in agileCrmClientContactEntity.PhoneNumber)
+            agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertyEntity
                 {
-                    agileCrmServerPropertyEntities.Add(
-                        new AgileCrmServerExtendedPropertyEntity
-                        {
-                            Type = ContactPropertyType.System,
-                            Name = GeneralPropertyName.Phone,
-                            Value = item.Value,
-                            SubType = item.SubType.GetValue()
-                        });
-                }
-            }
+                    Type = PropertyType.System,
+                    Name = ContactPropertyName.Title,
+                    Value = agileCrmClientContactEntity.Title
+                });
 
-            if (agileCrmClientContactEntity.EmailAddress != null)
-            {
-                foreach (var item in agileCrmClientContactEntity.EmailAddress)
+            agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertyEntity
                 {
-                    agileCrmServerPropertyEntities.Add(
-                    new AgileCrmServerExtendedPropertyEntity
+                    Type = PropertyType.System,
+                    Name = ContactPropertyName.FirstName,
+                    Value = agileCrmClientContactEntity.FirstName
+                });
+
+            agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertyEntity
+                {
+                    Type = PropertyType.System,
+                    Name = ContactPropertyName.LastName,
+                    Value = agileCrmClientContactEntity.LastName
+                });
+
+            agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertyEntity
+                {
+                    Type = PropertyType.System,
+                    Name = ContactPropertyName.Company,
+                    Value = agileCrmClientContactEntity.CompanyName
+                });
+
+            foreach (var item in agileCrmClientContactEntity.PhoneNumber)
+            {
+                agileCrmServerPropertyEntities.Add(
+                    new AgileCrmServerPropertySubTypeEntity
                     {
-                        Type = ContactPropertyType.System,
-                        Name = GeneralPropertyName.Email,
+                        Type = PropertyType.System,
+                        Name = PropertyName.Phone,
                         Value = item.Value,
-                        SubType = item.SubType.ToString()
+                        SubType = item.SubType.ToPropertyValue()
                     });
-                }
             }
 
-            if (agileCrmClientContactEntity.Website != null)
+            foreach (var item in agileCrmClientContactEntity.EmailAddress)
             {
-                foreach (var item in agileCrmClientContactEntity.Website)
+                agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertySubTypeEntity
                 {
-                    agileCrmServerPropertyEntities.Add(
-                        new AgileCrmServerExtendedPropertyEntity
-                        {
-                            Type = ContactPropertyType.System,
-                            Name = GeneralPropertyName.Website,
-                            Value = item.Value,
-                            SubType = item.SubType.GetValue()
-                        });
-                }
+                    Type = PropertyType.System,
+                    Name = PropertyName.Email,
+                    Value = item.Value,
+                    SubType = item.SubType.ToString()
+                });
             }
 
-            if (agileCrmClientContactEntity.CustomFields != null)
+            foreach (var item in agileCrmClientContactEntity.Website)
             {
-                foreach (var item in agileCrmClientContactEntity.CustomFields)
+                agileCrmServerPropertyEntities.Add(
+                    new AgileCrmServerPropertySubTypeEntity
+                    {
+                        Type = PropertyType.System,
+                        Name = PropertyName.Website,
+                        Value = item.Value,
+                        SubType = item.SubType.ToPropertyValue()
+                    });
+            }
+
+            agileCrmServerPropertyEntities.Add(
+                new AgileCrmServerPropertyAddressEntity
                 {
-                    agileCrmServerPropertyEntities.Add(
-                        new AgileCrmServerPropertyEntity
-                        {
-                            Type = ContactPropertyType.Custom,
-                            Name = item.Key,
-                            Value = item.Value
-                        });
-                }
+                    Type = PropertyType.System,
+                    Name = PropertyName.Address,
+                    Value = new AgileCrmServerAddressEntity
+                    {
+                        Address = agileCrmClientContactEntity.AddressInformation.Address,
+                        City = agileCrmClientContactEntity.AddressInformation.City,
+                        State = agileCrmClientContactEntity.AddressInformation.State,
+                        Country = agileCrmClientContactEntity.AddressInformation.Country,
+                        ZipCode = agileCrmClientContactEntity.AddressInformation.ZipCode
+                    },
+                    SubType = agileCrmClientContactEntity.AddressInformation.SubType.ToPropertyValue()
+                });
+
+            foreach (var item in agileCrmClientContactEntity.CustomFields)
+            {
+                agileCrmServerPropertyEntities.Add(
+                    new AgileCrmServerPropertyEntity
+                    {
+                        Type = PropertyType.Custom,
+                        Name = item.Key,
+                        Value = item.Value
+                    });
             }
 
             var tagsCollection = new List<string>();
 
-            if (agileCrmClientContactEntity.Tags != null)
+            foreach (var item in agileCrmClientContactEntity.Tags)
             {
-                foreach (var item in agileCrmClientContactEntity.Tags)
-                {
-                    tagsCollection.Add(item);
-                }
+                tagsCollection.Add(item);
             }
 
-            return new AgileCrmServerContactEntity
+            var agileCrmServerContactEntity = new AgileCrmServerContactEntity
             {
-                // AgileCrmServerContactEntity.Id (set in update method only).
-                // AgileCrmServerContactEntity.CompanyId (set in update method only).
+                // AgileCrmServerContactEntity.Id (set in method only).
+                // AgileCrmServerContactEntity.CompanyId (set in method only).
                 StarValue = agileCrmClientContactEntity.StarValue,
                 LeadScore = agileCrmClientContactEntity.LeadScore,
                 Properties = agileCrmServerPropertyEntities,
                 Tags = tagsCollection
             };
+
+            return agileCrmServerContactEntity;
         }
     }
 }

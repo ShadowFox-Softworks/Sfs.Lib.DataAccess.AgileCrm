@@ -1,13 +1,10 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm
+﻿namespace Sfs.Lib.DataAccess.AgileCrm
 {
     using System;
     using Microsoft.Extensions.Logging;
-    using Osw.Lib.DataAccess.AgileCrm.Entities;
-    using Osw.Lib.DataAccess.AgileCrm.Interface;
-    using Osw.Lib.DataAccess.AgileCrm.Logic;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
-    using Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Processors;
+    using Sfs.Lib.DataAccess.AgileCrm.Entities;
+    using Sfs.Lib.DataAccess.AgileCrm.Interface;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <summary>
     /// The AgileCRM Client Factory.
@@ -41,8 +38,8 @@
             ILoggerFactory loggerFactory,
             AgileCrmConfiguration agileCrmConfiguration)
         {
-            NullGuard.EnsureNotNull(loggerFactory, nameof(loggerFactory));
-            NullGuard.EnsureNotNull(agileCrmConfiguration, nameof(agileCrmConfiguration));
+            loggerFactory.EnsureNotNull();
+            agileCrmConfiguration.EnsureNotNull();
 
             if (localLoggerFactory == null)
             {
@@ -65,27 +62,7 @@
         /// </returns>
         private static IAgileCrmClient Initialize()
         {
-            var httpClientWrapper = new HttpClientWrapper(
-                localLoggerFactory,
-                localAgileCrmConfiguration);
-
-            var searchProcessor = new SearchProcessor(
-                localLoggerFactory,
-                httpClientWrapper);
-
-            var contactProcessor = new ContactProcessor(
-                localLoggerFactory,
-                searchProcessor,
-                httpClientWrapper);
-
-            var dealProcessor = new DealProcessor(
-                localLoggerFactory,
-                searchProcessor,
-                httpClientWrapper);
-
-            return new AgileCrmClient(
-                contactProcessor,
-                dealProcessor);
+            // TODO: Initialize client factory (NOTE: Maybe instantiate processors independently)
         }
     }
 }

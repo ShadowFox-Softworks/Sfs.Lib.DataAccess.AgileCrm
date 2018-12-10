@@ -1,4 +1,4 @@
-﻿namespace Osw.Lib.DataAccess.AgileCrm.Logic.Internal.Attributes
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Attributes
 {
     using System;
     using System.Collections.Generic;
@@ -23,8 +23,6 @@
         /// <inheritdoc />
         public override bool IsValid(object value)
         {
-            var type = value.GetType();
-
             foreach (var item in value as ICollection<string>)
             {
                 if (item.Length > this.MaximumLength

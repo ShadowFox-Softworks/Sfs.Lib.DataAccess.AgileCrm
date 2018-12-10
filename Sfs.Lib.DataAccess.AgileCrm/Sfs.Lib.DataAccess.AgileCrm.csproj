@@ -13,6 +13,7 @@
     <Description>ShadowFox Softworks AgileCRM library provides reusable simplified communication with the AgileCRM REST API.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>Sfs.Lib.DataAccess.AgileCrm</AssemblyName>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,7 +50,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\Tasks\" />
-    <Folder Include="Entities\Notes\" />
   </ItemGroup>
 
 </Project>
