@@ -1,4 +1,4 @@
-﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Translators
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers
 {
     using System.Collections.Generic;
     using Sfs.Lib.DataAccess.AgileCrm.Entities;
@@ -8,12 +8,12 @@
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <summary>
-    /// The Contact Entity Translator.
+    /// The Contact Entity Mapper.
     /// </summary>
-    internal static class ContactEntityTranslator
+    internal static class ContactEntityMapper
     {
         /// <summary>
-        /// Translates the AgileCRM client entity to a AgileCRM server entity.
+        /// Maps the AgileCRM client entity onto a AgileCRM server entity.
         /// </summary>
         /// <param name="agileCrmClientContactEntity">The agile CRM client contact entity.</param>
         /// <returns>

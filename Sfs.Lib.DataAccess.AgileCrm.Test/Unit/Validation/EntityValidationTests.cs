@@ -1,12 +1,12 @@
-﻿namespace Sfs.Lib.DataAccess.AgileCrm.Test.Unit.Companies
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Test.Unit.Validation
 {
     using NUnit.Framework;
 
     /// <summary>
-    /// The Get Deals Unit Tests.
+    /// The Entity Validation Unit Tests.
     /// </summary>
     [TestFixture]
-    public class GetDealsTests : TestBase
+    public class EntityValidationTests : TestBase
     {
         /// <summary>
         ///

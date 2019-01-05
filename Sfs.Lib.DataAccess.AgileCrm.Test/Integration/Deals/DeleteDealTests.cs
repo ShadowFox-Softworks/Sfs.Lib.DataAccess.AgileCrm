@@ -6,7 +6,19 @@
     /// The Delete Deal Integration Tests.
     /// </summary>
     [TestFixture]
-    public class DeleteDealTests
+    public class DeleteDealTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

@@ -4,9 +4,9 @@
     using Sfs.Lib.DataAccess.AgileCrm.Entities.Internal;
 
     /// <summary>
-    /// The Property Sub Type Resolver.
+    /// The Client Sub Type Extentions.
     /// </summary>
-    internal static class PropertySubTypeResolver
+    internal static class ClientSubTypeExtentions
     {
         /// <summary>
         /// Returns the field value where the field name matches the argument.
@@ -20,6 +20,7 @@
             // Gets the field value in PropertySubType.cs where the field name is equal to that
             // of the "subType" argument enum as a string and returns the value of the field as
             // a string.
+
             return typeof(PropertySubType).GetField(subType.ToString()).GetValue(null).ToString();
         }
     }

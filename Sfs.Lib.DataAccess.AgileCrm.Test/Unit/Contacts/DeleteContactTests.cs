@@ -6,7 +6,19 @@
     /// The Delete Contact Unit Tests.
     /// </summary>
     [TestFixture]
-    public class DeleteContactTests
+    public class DeleteContactTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

@@ -6,7 +6,19 @@
     /// The Update Contact Integration Tests.
     /// </summary>
     [TestFixture]
-    public class UpdateContactTests
+    public class UpdateContactTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

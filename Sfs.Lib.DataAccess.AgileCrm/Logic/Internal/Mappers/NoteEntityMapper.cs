@@ -1,14 +1,14 @@
-﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Translators
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers
 {
     using Sfs.Lib.DataAccess.AgileCrm.Entities.Notes;
 
     /// <summary>
-    /// The Note Entity Translator.
+    /// The Note Entity Mapper.
     /// </summary>
-    internal static class NoteEntityTranslator
+    internal static class NoteEntityMapper
     {
         /// <summary>
-        /// Translates the AgileCRM client entity to a AgileCRM server entity.
+        /// Maps the AgileCRM client entity onto a AgileCRM server entity.
         /// </summary>
         /// <param name="agileCrmClientNoteEntity">The agile CRM client note entity.</param>
         /// <returns>

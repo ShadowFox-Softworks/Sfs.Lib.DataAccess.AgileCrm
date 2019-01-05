@@ -6,7 +6,19 @@
     /// The Get Contact Unit Tests.
     /// </summary>
     [TestFixture]
-    public class GetContactTests
+    public class GetContactTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

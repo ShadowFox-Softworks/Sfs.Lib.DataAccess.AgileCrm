@@ -6,7 +6,19 @@
     /// The Get Deal Notes Unit Tests.
     /// </summary>
     [TestFixture]
-    public class GetDealNotesTests
+    public class GetDealNotesTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

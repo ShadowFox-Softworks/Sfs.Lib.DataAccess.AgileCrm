@@ -6,7 +6,19 @@
     /// The Get Deals Integration Tests.
     /// </summary>
     [TestFixture]
-    public class GetDealsTests
+    public class GetDealsTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

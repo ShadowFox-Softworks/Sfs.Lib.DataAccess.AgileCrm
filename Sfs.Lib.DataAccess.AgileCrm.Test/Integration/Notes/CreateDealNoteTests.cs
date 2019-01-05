@@ -6,7 +6,19 @@
     /// The Create Deal Note Integration Tests.
     /// </summary>
     [TestFixture]
-    public class CreateDealNoteTests
+    public class CreateDealNoteTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

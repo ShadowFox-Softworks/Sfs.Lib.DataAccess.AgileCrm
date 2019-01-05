@@ -15,7 +15,9 @@
         /// </summary>
         protected TestBase()
         {
-            this.LoggerFactoryStub = new LoggerFactory();
+            this.Stopwatch = new Stopwatch();
+
+            this.StubbedLoggerFactory = new LoggerFactory();
 
             this.InitializedLoggerFactory = new LoggerFactory().AddSerilog();
 
@@ -32,17 +34,24 @@
         protected ILoggerFactory InitializedLoggerFactory { get; }
 
         /// <summary>
-        /// Gets the stubbed logger factory.
+        /// Gets the stopwatch.
         /// </summary>
-        protected ILoggerFactory LoggerFactoryStub { get; }
+        protected Stopwatch Stopwatch { get; }
 
         /// <summary>
-        /// Writes the time that was elapsed during the test.
+        /// Gets the stubbed logger factory.
+        /// </summary>
+        protected ILoggerFactory StubbedLoggerFactory { get; }
+
+        /// <summary>
+        /// Measures performance by writing the time that was elapsed during 'act' phase of the test.
         /// </summary>
         /// <param name="stopwatch">The stopwatch.</param>
         protected static void WriteTimeElapsed(Stopwatch stopwatch)
         {
             Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds}ms ({stopwatch.Elapsed})");
+
+            stopwatch.Reset();
         }
     }
 }

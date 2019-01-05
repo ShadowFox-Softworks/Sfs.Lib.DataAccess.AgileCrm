@@ -14,7 +14,7 @@
     using Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal;
     using Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors;
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
-    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Translators;
+    using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers;
 
     /// <inheritdoc />
     internal sealed class CompaniesProcessor : ICompaniesProcessor

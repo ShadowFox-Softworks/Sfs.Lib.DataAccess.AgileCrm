@@ -6,7 +6,19 @@
     /// The Update Company Integration Tests.
     /// </summary>
     [TestFixture]
-    public class UpdateCompanyTests
+    public class UpdateCompanyTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

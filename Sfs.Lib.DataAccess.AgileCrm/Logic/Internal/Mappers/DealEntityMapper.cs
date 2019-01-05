@@ -1,16 +1,16 @@
-﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Resolvers.Requests
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers
 {
     using System.Collections.Generic;
     using Sfs.Lib.DataAccess.AgileCrm.Entities.Deals;
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Helpers;
 
     /// <summary>
-    /// The Deal Entity Translator.
+    /// The Deal Entity Mapper.
     /// </summary>
-    internal static class DealEntityTranslator
+    internal static class DealEntityMapper
     {
         /// <summary>
-        /// Translates the AgileCRM client entity to a AgileCRM server entity.
+        /// Maps the AgileCRM client entity onto a AgileCRM server entity.
         /// </summary>
         /// <param name="agileCrmClientDealEntity">The agile CRM client deal entity.</param>
         /// <returns>

@@ -6,7 +6,24 @@
     /// The Update Company Unit Tests.
     /// </summary>
     [TestFixture]
-    public class UpdateCompanyTests
+    public class UpdateCompanyTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+            this.Stopwatch.Start();
+
+            this.Stopwatch.Stop();
+
+            // Assert
+
+            WriteTimeElapsed(this.Stopwatch);
+        }
     }
 }

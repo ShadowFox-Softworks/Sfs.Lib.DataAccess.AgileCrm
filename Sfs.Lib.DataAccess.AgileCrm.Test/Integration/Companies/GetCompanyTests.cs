@@ -6,7 +6,19 @@
     /// The Get Company Integration Tests.
     /// </summary>
     [TestFixture]
-    public class GetCompanyTests
+    public class GetCompanyTests : TestBase
     {
+        /// <summary>
+        ///
+        /// </summary>
+        [Test]
+        public void MethodName()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
     }
 }

@@ -1,12 +1,12 @@
-﻿namespace Sfs.Lib.DataAccess.AgileCrm.Test.Unit.Companies
+﻿namespace Sfs.Lib.DataAccess.AgileCrm.Test.Unit.Mappers
 {
     using NUnit.Framework;
 
     /// <summary>
-    /// The Get Deals Unit Tests.
+    /// The Note Entity Mapper Unit Tests.
     /// </summary>
     [TestFixture]
-    public class GetDealsTests : TestBase
+    public class NoteEntityMapperTests : TestBase
     {
         /// <summary>
         ///
