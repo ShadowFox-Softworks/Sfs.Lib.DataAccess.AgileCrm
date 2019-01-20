@@ -61,10 +61,12 @@
 
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientNoteEntity);
 
                 Validator.ValidateObject(agileCrmClientNoteEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerContactNoteEntity = agileCrmClientNoteEntity.ToServerContactNoteEntity();
 
                 const string Uri = "notes";
@@ -73,8 +75,10 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)
@@ -98,10 +102,12 @@
 
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientNoteEntity);
 
                 Validator.ValidateObject(agileCrmClientNoteEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerDealNoteEntity = agileCrmClientNoteEntity.ToServerDealNoteEntity();
 
                 const string Uri = "opportunity/deals/notes";
@@ -110,8 +116,10 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)
@@ -135,12 +143,15 @@
             IList<AgileCrmServerContactNoteEntity> agileCrmServerContactNoteEntities;
             try
             {
+                // Send request to server
                 var uri = $"contacts/{contactId}/notes";
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
 
+                // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 agileCrmServerContactNoteEntities = JsonConvert.DeserializeObject<List<AgileCrmServerContactNoteEntity>>(
@@ -169,12 +180,15 @@
             IList<AgileCrmServerDealNoteEntity> agileCrmServerDealNoteEntities;
             try
             {
+                // Send request to server
                 var uri = $"opportunity/{dealId}/notes";
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
 
+                // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 agileCrmServerDealNoteEntities = JsonConvert.DeserializeObject<List<AgileCrmServerDealNoteEntity>>(

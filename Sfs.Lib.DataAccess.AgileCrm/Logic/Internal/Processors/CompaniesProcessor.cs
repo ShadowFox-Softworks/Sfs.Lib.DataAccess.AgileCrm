@@ -17,6 +17,7 @@
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers;
 
     /// <inheritdoc />
+    /// <seealso cref="Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors.ICompaniesProcessor" />
     internal sealed class CompaniesProcessor : ICompaniesProcessor
     {
         /// <summary>
@@ -61,10 +62,12 @@
             var companyId = default(string);
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientCompanyEntity);
 
                 Validator.ValidateObject(agileCrmClientCompanyEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerCompanyEntity = agileCrmClientCompanyEntity.ToServerCompanyEntity();
 
                 const string Uri = "contacts";
@@ -73,10 +76,13 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
 
+                // Retrieve identifier for logging
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 companyId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
@@ -101,10 +107,12 @@
 
             try
             {
+                // Send request to server
                 var uri = $"contacts/{companyId}";
 
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode, HttpStatusCode.NoContent);
             }
             catch (Exception exception)
@@ -128,12 +136,15 @@
             var agileCrmServerCompanyEntity = default(AgileCrmServerCompanyEntity);
             try
             {
+                // Send request to server
                 var uri = $"contacts/{companyId}";
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
 
+                // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 var httpContentAsJObject = JObject.Parse(httpContentAsString);
@@ -169,10 +180,12 @@
 
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientCompanyEntity);
 
                 Validator.ValidateObject(agileCrmClientCompanyEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerCompanyEntity = agileCrmClientCompanyEntity.ToServerCompanyEntity();
 
                 agileCrmServerCompanyEntity.Id = companyId;
@@ -183,8 +196,10 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)

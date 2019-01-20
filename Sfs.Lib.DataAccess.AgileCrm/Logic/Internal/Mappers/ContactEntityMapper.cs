@@ -21,39 +21,36 @@
         /// </returns>
         public static AgileCrmServerContactEntity ToServerContactEntity(this AgileCrmClientContactEntity agileCrmClientContactEntity)
         {
-            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyBase>();
-
-            agileCrmServerPropertyEntities.Add(
+            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyBase>
+            {
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = ContactPropertyName.Title,
                     Value = agileCrmClientContactEntity.Title
-                });
+                },
 
-            agileCrmServerPropertyEntities.Add(
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = ContactPropertyName.FirstName,
                     Value = agileCrmClientContactEntity.FirstName
-                });
+                },
 
-            agileCrmServerPropertyEntities.Add(
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = ContactPropertyName.LastName,
                     Value = agileCrmClientContactEntity.LastName
-                });
+                },
 
-            agileCrmServerPropertyEntities.Add(
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = ContactPropertyName.Company,
                     Value = agileCrmClientContactEntity.CompanyName
-                });
+                }
+            };
 
             foreach (var item in agileCrmClientContactEntity.PhoneNumber)
             {

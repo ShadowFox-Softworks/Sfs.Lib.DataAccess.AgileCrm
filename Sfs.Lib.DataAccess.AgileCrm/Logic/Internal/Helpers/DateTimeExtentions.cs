@@ -16,6 +16,9 @@
         /// </returns>
         public static long ToEpoch(this DateTime dateTime)
         {
+            // Converts a DateTime object to its respective epoch
+            // Epoch is the number of seconds since the 01/01/1970
+
             return new DateTimeOffset(dateTime).ToUnixTimeSeconds();
         }
     }

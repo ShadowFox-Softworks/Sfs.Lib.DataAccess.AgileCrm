@@ -61,6 +61,3 @@ $RECYCLE.BIN/
 
 # .NET Framework Packages
 packages
-
-# Files
-GlobalSuppressions.cs

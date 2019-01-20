@@ -21,23 +21,22 @@
         /// </returns>
         public static AgileCrmServerCompanyEntity ToServerCompanyEntity(this AgileCrmClientCompanyEntity agileCrmClientCompanyEntity)
         {
-            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyBase>();
-
-            agileCrmServerPropertyEntities.Add(
+            var agileCrmServerPropertyEntities = new List<AgileCrmServerPropertyBase>
+            {
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = CompanyPropertyName.Name,
                     Value = agileCrmClientCompanyEntity.Name
-                });
+                },
 
-            agileCrmServerPropertyEntities.Add(
                 new AgileCrmServerPropertyEntity
                 {
                     Type = PropertyType.System,
                     Name = CompanyPropertyName.URL,
                     Value = agileCrmClientCompanyEntity.URL
-                });
+                }
+            };
 
             foreach (var item in agileCrmClientCompanyEntity.PhoneNumber)
             {

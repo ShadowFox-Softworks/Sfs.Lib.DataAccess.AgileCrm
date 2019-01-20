@@ -6,7 +6,7 @@
     /// <summary>
     /// The AgileCRM No Content Exception.
     /// </summary>
-    /// <seealso cref="Exception" />
+    /// <seealso cref="System.Exception" />
     [Serializable]
     internal sealed class AgileCrmNoContentException : Exception
     {

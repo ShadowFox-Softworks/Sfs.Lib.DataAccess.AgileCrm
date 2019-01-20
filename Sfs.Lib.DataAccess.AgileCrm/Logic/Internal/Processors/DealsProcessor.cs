@@ -16,6 +16,7 @@
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers;
 
     /// <inheritdoc />
+    /// <seealso cref="Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors.IDealsProcessor" />
     internal sealed class DealsProcessor : IDealsProcessor
     {
         /// <summary>
@@ -61,10 +62,12 @@
             var dealId = default(string);
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientDealEntity);
 
                 Validator.ValidateObject(agileCrmClientDealEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerDealEntity();
 
                 var serializedEntity = JsonConvert.SerializeObject(agileCrmServerDealEntity, ProcessorFields.SerializerSettings);
@@ -73,10 +76,13 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
 
+                // Retrieve identifier for logging
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 dealId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
@@ -101,10 +107,12 @@
 
             try
             {
+                // Send request to server
                 var uri = $"opportunity/{dealId}";
 
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)
@@ -128,12 +136,15 @@
             var agileCrmServerDealEntities = default(List<AgileCrmServerDealEntity>);
             try
             {
+                // Send request to server
                 var uri = $"contacts/search/email/{emailAddress}";
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
 
+                // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 var contactId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) });
@@ -171,10 +182,12 @@
 
             try
             {
+                // Validate argument entity
                 var validationContext = new ValidationContext(agileCrmClientDealEntity);
 
                 Validator.ValidateObject(agileCrmClientDealEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerDealEntity = agileCrmClientDealEntity.ToServerDealEntity();
 
                 agileCrmServerDealEntity.Id = dealId;
@@ -185,8 +198,10 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Deals, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)

@@ -17,6 +17,7 @@
     using Sfs.Lib.DataAccess.AgileCrm.Logic.Internal.Mappers;
 
     /// <inheritdoc />
+    /// <seealso cref="Sfs.Lib.DataAccess.AgileCrm.Interfaces.Internal.Processors.IContactsProcessor" />
     internal sealed class ContactsProcessor : IContactsProcessor
     {
         /// <summary>
@@ -66,21 +67,22 @@
 
                 Validator.ValidateObject(agileCrmClientContactEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerContactEntity = agileCrmClientContactEntity.ToServerContactEntity();
 
-                // Prepare entity for transmission
                 const string Uri = "contacts";
 
                 var serializedEntity = JsonConvert.SerializeObject(agileCrmServerContactEntity, ProcessorFields.SerializerSettings);
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
-                // Send entity to server
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                // Analyze response for errors
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Contacts, httpResponseMessage.StatusCode);
 
+                // Retrieve identifier for logging
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 contactId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
@@ -110,7 +112,7 @@
 
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                // Analyze response for errors
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Contacts, httpResponseMessage.StatusCode, HttpStatusCode.NoContent);
             }
             catch (Exception exception)
@@ -140,9 +142,10 @@
 
                 var httpResponseMessage = await this.httpClient.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-                // Analyze response for errors
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Contacts, httpResponseMessage.StatusCode);
 
+                // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 contactId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
@@ -185,9 +188,9 @@
 
                 Validator.ValidateObject(agileCrmClientContactEntity, validationContext, true);
 
+                // Prepare entity for transmission
                 var agileCrmServerContactEntity = agileCrmClientContactEntity.ToServerContactEntity();
 
-                // Prepare entity for transmission
                 agileCrmServerContactEntity.Id = contactId;
 
                 const string Uri = "contacts/edit-properties";
@@ -196,10 +199,10 @@
 
                 var stringContent = new StringContent(serializedEntity, ProcessorFields.EncodingType, ProcessorFields.MediaType);
 
-                // Send entity to server
+                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent, cancellationToken).ConfigureAwait(false);
 
-                // Analyze response for errors
+                // Analyze server response for errors
                 ResponseAnalyzer.Analyze(ProcessorType.Contacts, httpResponseMessage.StatusCode);
             }
             catch (Exception exception)

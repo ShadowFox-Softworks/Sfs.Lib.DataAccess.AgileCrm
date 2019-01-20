@@ -6,7 +6,7 @@
     /// <summary>
     /// The AgileCRM Unauthorized Exception.
     /// </summary>
-    /// <seealso cref="Exception" />
+    /// <seealso cref="System.Exception" />
     [Serializable]
     internal sealed class AgileCrmUnauthorizedException : Exception
     {
