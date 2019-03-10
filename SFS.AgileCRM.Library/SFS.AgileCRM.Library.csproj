@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>ShadowFox Softworks</Authors>
+    <Company>ShadowFox Softworks</Company>
+    <Copyright>Copyright © ShadowFox Softworks</Copyright>
+    <PackageTags>Shadow Fox Agile CRM</PackageTags>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/ShadowFox-Softworks/SFS.AgileCRM</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ShadowFox-Softworks/SFS.AgileCRM</PackageProjectUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <Description>A reusable and simplified .NET implementation of the AgileCRM REST API by ShadowFox Softworks.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>SFS.AgileCRM.Library</AssemblyName>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\Opula\Documents\Visual Studio 2017\Projects\SFS.AgileCrm\SFS.AgileCRM.Library\SFS.AgileCRM.Library.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Tasks\**" />
+    <EmbeddedResource Remove="Entities\Tasks\**" />
+    <None Remove="Entities\Tasks\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="codecracker.CSharp" Version="1.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta009">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
