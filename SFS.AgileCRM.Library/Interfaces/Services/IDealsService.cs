@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Threading;
     using System.Threading.Tasks;
-    using SFS.AgileCRM.Library.Entities.Deals;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
 
     /// <summary>
     /// DO NOT USE.
@@ -23,7 +23,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task CreateAsync(string emailAddress, AgileCrmDealModel agileCrmDealModel);
+        Task CreateAsync(string emailAddress, AgileCrmDealRequest agileCrmDealModel);
 
         /// <summary>
         /// Deletes an existing deal via its identifier.
@@ -54,6 +54,6 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task UpdateAsync(long dealId, AgileCrmDealModel agileCrmDealModel);
+        Task UpdateAsync(long dealId, AgileCrmDealRequest agileCrmDealModel);
     }
 }

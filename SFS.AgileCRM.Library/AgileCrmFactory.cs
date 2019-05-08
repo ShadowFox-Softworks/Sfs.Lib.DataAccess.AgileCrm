@@ -2,7 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.Logging;
-    using SFS.AgileCRM.Library.Entities;
+    using SFS.AgileCRM.Library.Data.Configurations;
     using SFS.AgileCRM.Library.Interface;
     using SFS.AgileCRM.Library.Logic;
     using SFS.AgileCRM.Library.Logic.Internal;
@@ -25,28 +25,28 @@
         private static AgileCrmConfiguration localAgileCrmConfiguration;
 
         /// <summary>
-        /// The local logger factory.
+        /// The local logger.
         /// </summary>
-        private static ILoggerFactory localLoggerFactory;
+        private static ILogger localLogger;
 
         /// <summary>
         /// Creates a new instance of AgileCRM.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="agileCrmConfiguration">The AgileCRM configuration.</param>
+        /// <param name="loggerFactory">[Optional] The logger factory.</param>
         /// <returns>
-        ///   <see cref="IAgileCrm"/>.
+        ///   <see cref="IAgileCrm" />.
         /// </returns>
         public static IAgileCrm Create(
-            ILoggerFactory loggerFactory,
-            AgileCrmConfiguration agileCrmConfiguration)
+            AgileCrmConfiguration agileCrmConfiguration,
+            ILoggerFactory loggerFactory = null)
         {
             loggerFactory.EnsureNotNull();
             agileCrmConfiguration.EnsureNotNull();
 
-            if (localLoggerFactory == null)
+            if (localLogger == null)
             {
-                localLoggerFactory = loggerFactory;
+                localLogger = loggerFactory.CreateLogger<AgileCrm>();
             }
 
             if (localAgileCrmConfiguration == null)
@@ -66,35 +66,42 @@
         private static IAgileCrm Initialize()
         {
             var httpClient = new HttpClientWrapper(
-                localLoggerFactory,
                 localAgileCrmConfiguration);
 
             var companiesService = new CompaniesService(
-                localLoggerFactory,
-                httpClient);
+                httpClient,
+                localLogger);
 
             var contactsService = new ContactsService(
-                localLoggerFactory,
-                httpClient);
+                httpClient,
+                localLogger);
 
             var dealsService = new DealsService(
-                localLoggerFactory,
-                httpClient);
+                httpClient,
+                localLogger);
 
             var contactNotesService = new ContactNotesService(
-                localLoggerFactory,
-                httpClient);
+                httpClient,
+                localLogger);
 
             var dealNotesService = new DealNotesService(
-                localLoggerFactory,
-                httpClient);
+                httpClient,
+                localLogger);
+
+            var notesService = new NotesService(
+                contactNotesService,
+                dealNotesService);
+
+            var tasksService = new TasksService(
+                httpClient,
+                localLogger);
 
             var agileCrm = new AgileCrm(
                 companiesService,
                 contactsService,
                 dealsService,
-                contactNotesService,
-                dealNotesService);
+                notesService,
+                tasksService);
 
             return agileCrm;
         }

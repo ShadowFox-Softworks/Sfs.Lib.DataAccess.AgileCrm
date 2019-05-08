@@ -11,15 +11,15 @@
     public interface INotesService
     {
         /// <summary>
-        /// Gets the contact notes.
+        /// Gets the contacts.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        IContactNotesService Contact { get; }
+        IContactNotesService Contacts { get; }
 
         /// <summary>
-        /// Gets the deal notes.
+        /// Gets the deals.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        IDealNotesService Deal { get; }
+        IDealNotesService Deals { get; }
     }
 }

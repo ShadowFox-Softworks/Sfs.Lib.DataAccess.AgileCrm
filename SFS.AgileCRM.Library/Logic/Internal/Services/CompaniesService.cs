@@ -1,15 +1,12 @@
 ﻿namespace SFS.AgileCRM.Library.Logic.Internal.Services
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.Net;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using SFS.AgileCRM.Library.Entities.Companies;
-    using SFS.AgileCRM.Library.Entities.Internal;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
+    using SFS.AgileCRM.Library.Data.Static.Internal;
     using SFS.AgileCRM.Library.Interfaces.Internal;
     using SFS.AgileCRM.Library.Interfaces.Services;
     using SFS.AgileCRM.Library.Logic.Internal.Helpers;
@@ -37,54 +34,53 @@
         private readonly ILogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompaniesService"/> class.
+        /// Initializes a new instance of the <see cref="CompaniesService" /> class.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="httpClient">The HTTP client.</param>
+        /// <param name="logger">The logger.</param>
         public CompaniesService(
-            ILoggerFactory loggerFactory,
-            IHttpClient httpClient)
+            IHttpClient httpClient,
+            ILogger logger)
         {
-            loggerFactory.EnsureNotNull();
             httpClient.EnsureNotNull();
 
-            this.logger = loggerFactory.CreateLogger<AgileCrm>();
             this.httpClient = httpClient;
+
+            if (logger != null)
+            {
+                this.logger = logger;
+            }
         }
 
         /// <inheritdoc />
-        public async Task CreateAsync(AgileCrmCompanyModel agileCrmCompanyModel)
+        public async Task CreateAsync(AgileCrmCompanyRequest agileCrmCompanyModel)
         {
             const string MethodName = nameof(this.CreateAsync);
             this.logger.LogMethodStart(ClassName, MethodName);
 
-            var companyId = default(string);
+            var companyId = default(long);
             try
             {
-                // Validate argument entity
-                var validationContext = new ValidationContext(agileCrmCompanyModel);
+                // Validate argument object
+                agileCrmCompanyModel.ValidateModel();
 
-                Validator.ValidateObject(agileCrmCompanyModel, validationContext, true);
+                // Serialize object to JSON
+                var companyEntityBase = agileCrmCompanyModel.ToCompanyEntityBase();
 
-                // Prepare entity for transmission
-                var agileCrmCompanyEntity = agileCrmCompanyModel.ToCompanyEntity();
+                var stringContent = companyEntityBase.ToStringContent();
 
+                // Send JSON to server
                 const string Uri = "contacts";
 
-                var serializedEntity = JsonConvert.SerializeObject(agileCrmCompanyEntity, ImplementationFields.SerializerSettings);
-
-                var stringContent = new StringContent(serializedEntity, ImplementationFields.EncodingType, ImplementationFields.MediaType);
-
-                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
+                httpResponseMessage.EnsureSuccessStatusCode();
 
                 // Retrieve identifier for logging
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                companyId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
+                companyId = httpContentAsString.DeserializeJson(new { id = default(long) }).id;
             }
             catch (Exception exception)
             {
@@ -92,7 +88,7 @@
                 throw;
             }
 
-            this.logger.LogCreated($"Company ({companyId})");
+            this.logger.LogCreated(ServiceType.Company, companyId);
             this.logger.LogMethodEnd(ClassName, MethodName);
         }
 
@@ -110,7 +106,7 @@
                 var httpResponseMessage = await this.httpClient.DeleteAsync(uri).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode, HttpStatusCode.NoContent);
+                httpResponseMessage.EnsureSuccessStatusCode();
             }
             catch (Exception exception)
             {
@@ -118,7 +114,7 @@
                 throw;
             }
 
-            this.logger.LogDeleted($"Company ({companyId})");
+            this.logger.LogDeleted(ServiceType.Company, companyId);
             this.logger.LogMethodEnd(ClassName, MethodName);
         }
 
@@ -137,7 +133,7 @@
                 var httpResponseMessage = await this.httpClient.GetAsync(uri).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
+                httpResponseMessage.EnsureSuccessStatusCode();
 
                 // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -148,7 +144,7 @@
 
                 httpContentAsJObject.Remove("properties");
 
-                agileCrmServerCompanyEntity = JsonConvert.DeserializeObject<AgileCrmCompanyEntity>(httpContentAsJObject.ToString());
+                agileCrmServerCompanyEntity = httpContentAsJObject.ToString().DeserializeJson<AgileCrmCompanyEntity>();
 
                 agileCrmServerCompanyEntity.Properties = agileCrmServerPropertyBases;
             }
@@ -158,41 +154,37 @@
                 throw;
             }
 
-            this.logger.LogRetrieved($"Company ({companyId})");
+            this.logger.LogRetrieved(ServiceType.Company, companyId);
             this.logger.LogMethodEnd(ClassName, MethodName);
 
             return agileCrmServerCompanyEntity;
         }
 
         /// <inheritdoc />
-        public async Task UpdateAsync(long companyId, AgileCrmCompanyModel agileCrmCompanyModel)
+        public async Task UpdateAsync(long companyId, AgileCrmCompanyRequest agileCrmCompanyModel)
         {
             const string MethodName = nameof(this.UpdateAsync);
             this.logger.LogMethodStart(ClassName, MethodName);
 
             try
             {
-                // Validate argument entity
-                var validationContext = new ValidationContext(agileCrmCompanyModel);
+                // Validate argument object
+                agileCrmCompanyModel.ValidateModel();
 
-                Validator.ValidateObject(agileCrmCompanyModel, validationContext, true);
+                // Serialize object to JSON
+                var companyEntityBase = agileCrmCompanyModel.ToCompanyEntityBase();
 
-                // Prepare entity for transmission
-                var agileCrmCompanyEntity = agileCrmCompanyModel.ToCompanyEntity();
+                companyEntityBase.Id = companyId;
 
-                agileCrmCompanyEntity.Id = companyId;
+                var stringContent = companyEntityBase.ToStringContent();
 
+                // Send JSON to server
                 const string Uri = "contacts/edit-properties";
 
-                var serializedEntity = JsonConvert.SerializeObject(agileCrmCompanyEntity, ImplementationFields.SerializerSettings);
-
-                var stringContent = new StringContent(serializedEntity, ImplementationFields.EncodingType, ImplementationFields.MediaType);
-
-                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PutAsync(Uri, stringContent).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Companies, httpResponseMessage.StatusCode);
+                httpResponseMessage.EnsureSuccessStatusCode();
             }
             catch (Exception exception)
             {
@@ -200,7 +192,7 @@
                 throw;
             }
 
-            this.logger.LogUpdated($"Company ({companyId})");
+            this.logger.LogUpdated(ServiceType.Company, companyId);
             this.logger.LogMethodEnd(ClassName, MethodName);
         }
     }

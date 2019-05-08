@@ -1,6 +1,7 @@
 ﻿namespace SFS.AgileCRM.Library.Logic.Internal.Mappers
 {
-    using SFS.AgileCRM.Library.Entities.Notes;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
 
     /// <summary>
     /// The Note Mapper.
@@ -8,18 +9,18 @@
     internal static class NoteMapper
     {
         /// <summary>
-        /// Maps a AgileCRM domain model onto a AgileCRM entity model.
+        /// Maps a AgileCrmContactNoteModel onto a ContactNoteEntityBase.
         /// </summary>
         /// <param name="agileCrmNoteModel">The AgileCRM note model.</param>
         /// <returns>
         ///   <see cref="AgileCrmContactNoteEntity" />.
         /// </returns>
-        public static AgileCrmContactNoteEntity ToContactNoteEntity(this AgileCrmNoteModel agileCrmNoteModel)
+        public static AgileCrmContactNoteEntity ToContactNoteEntityBase(this AgileCrmNoteRequest agileCrmNoteModel)
         {
             var agileCrmServerNoteEntity = new AgileCrmContactNoteEntity
             {
-                // Id = (retrieved only).
-                // ContactId = (set in method only).
+                // Id = (set by calling method if required).
+                // ContactId = (set by calling method if required).
                 Subject = agileCrmNoteModel.Subject,
                 Description = agileCrmNoteModel.Description
             };
@@ -28,18 +29,18 @@
         }
 
         /// <summary>
-        /// Maps a AgileCRM domain model onto a AgileCRM entity model.
+        /// Maps a AgileCrmDealNoteModel onto a DealNoteEntityBase.
         /// </summary>
         /// <param name="agileCrmNoteModel">The AgileCRM note model.</param>
         /// <returns>
         ///   <see cref="AgileCrmDealNoteEntity" />.
         /// </returns>
-        public static AgileCrmDealNoteEntity ToDealNoteEntity(this AgileCrmNoteModel agileCrmNoteModel)
+        public static AgileCrmDealNoteEntity ToDealNoteEntityBase(this AgileCrmNoteRequest agileCrmNoteModel)
         {
             var agileCrmServerNoteEntity = new AgileCrmDealNoteEntity
             {
-                // Id = (retrieved only).
-                // DealId = (set in method only).
+                // Id = (set by calling method if required).
+                // DealId = (set by calling method if required).
                 Subject = agileCrmNoteModel.Subject,
                 Description = agileCrmNoteModel.Description
             };

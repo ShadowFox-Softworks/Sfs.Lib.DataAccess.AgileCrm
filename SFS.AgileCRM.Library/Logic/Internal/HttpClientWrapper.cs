@@ -2,10 +2,8 @@
 {
     using System.Net;
     using System.Net.Http;
-    using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using SFS.AgileCRM.Library.Entities;
+    using SFS.AgileCRM.Library.Data.Configurations;
     using SFS.AgileCRM.Library.Interfaces.Internal;
     using SFS.AgileCRM.Library.Logic.Internal.Helpers;
 
@@ -38,23 +36,14 @@
         private readonly string baseUri;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger logger;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="HttpClientWrapper" /> class.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="agileCrmConfiguration">The agile CRM configuration.</param>
         public HttpClientWrapper(
-            ILoggerFactory loggerFactory,
             AgileCrmConfiguration agileCrmConfiguration)
         {
-            loggerFactory.EnsureNotNull();
             agileCrmConfiguration.EnsureNotNull();
 
-            this.logger = loggerFactory.CreateLogger<HttpClientWrapper>();
             this.baseUri = $"https://{agileCrmConfiguration.Domain}.agilecrm.com/dev/api/";
 
             // HttpClient instantiated with AgileCRM account credentials

@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Serilog;
     using SFS.AgileCRM.Library;
-    using SFS.AgileCRM.Library.Entities;
+    using SFS.AgileCRM.Library.Data.Configurations;
     using SFS.AgileCRM.Library.Interface;
 
     /// <summary>
@@ -19,19 +19,17 @@
         /// </summary>
         protected TestBase()
         {
-            this.Stopwatch = new Stopwatch();
-
             this.StubbedLoggerFactory = new LoggerFactory();
 
-            this.InitializedLoggerFactory = new LoggerFactory().AddSerilog();
+            //this.InitializedLoggerFactory = new LoggerFactory().AddSerilog();
 
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().Enrich.FromLogContext().WriteTo.Console().CreateLogger();
+            //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().Enrich.FromLogContext().WriteTo.Console().CreateLogger();
 
-            var configuration = new ConfigurationBuilder().AddUserSecrets<AgileCrmConfiguration>().Build();
+            //var configuration = new ConfigurationBuilder().AddUserSecrets<AgileCrmConfiguration>().Build();
 
-            this.AgileCrmConfiguration = configuration.GetValue<AgileCrmConfiguration>(nameof(this.AgileCrmConfiguration));
+            //this.AgileCrmConfiguration = configuration.GetValue<AgileCrmConfiguration>(nameof(this.AgileCrmConfiguration));
 
-            this.AgileCrmClient = AgileCrmFactory.Create(this.InitializedLoggerFactory, this.AgileCrmConfiguration);
+            //this.AgileCrmClient = AgileCrmFactory.Create(this.AgileCrmConfiguration, this.InitializedLoggerFactory);
         }
 
         /// <summary>
@@ -50,24 +48,39 @@
         protected ILoggerFactory InitializedLoggerFactory { get; }
 
         /// <summary>
-        /// Gets the stopwatch.
-        /// </summary>
-        protected Stopwatch Stopwatch { get; }
-
-        /// <summary>
         /// Gets the stubbed logger factory.
         /// </summary>
         protected ILoggerFactory StubbedLoggerFactory { get; }
 
         /// <summary>
-        /// Measures performance by writing the time that was elapsed during 'act' phase of the test.
+        /// Gets or sets the stopwatch.
         /// </summary>
-        /// <param name="stopwatch">The stopwatch.</param>
-        protected static void WriteTimeElapsed(Stopwatch stopwatch)
-        {
-            Console.WriteLine($"Elapsed: {stopwatch.ElapsedMilliseconds}ms ({stopwatch.Elapsed})");
+        private static Stopwatch Stopwatch { get; set; }
 
-            stopwatch.Reset();
+        /// <summary>
+        /// Starts the stopwatch.
+        /// </summary>
+        protected static void StartStopwatch()
+        {
+            Stopwatch = new Stopwatch();
+
+            Stopwatch.Start();
+        }
+
+        /// <summary>
+        /// Stops the stopwatch.
+        /// </summary>
+        protected static void StopStopwatch()
+        {
+            Stopwatch.Stop();
+        }
+
+        /// <summary>
+        /// Writes the time elapsed.
+        /// </summary>
+        protected static void WriteTimeElapsed()
+        {
+            Console.WriteLine($"Elapsed: {Stopwatch.ElapsedMilliseconds}ms ({Stopwatch.Elapsed})");
         }
     }
 }

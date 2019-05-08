@@ -25,8 +25,7 @@
         {
             foreach (var item in value as ICollection<string>)
             {
-                if (item.Length > this.MaximumLength
-                    || item.Length < this.MinimumLength)
+                if (item.Length > this.MaximumLength || item.Length < this.MinimumLength)
                 {
                     return false;
                 }

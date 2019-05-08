@@ -1,7 +1,8 @@
 ﻿namespace SFS.AgileCRM.Library.Logic.Internal.Helpers
 {
     using System.Net;
-    using SFS.AgileCRM.Library.Entities.Internal;
+    using System.Net.Http;
+    using SFS.AgileCRM.Library.Data.Static.Internal;
 
     /// <summary>
     /// The Response Analyzer.
@@ -11,14 +12,15 @@
         /// <summary>
         /// Analyzes the AgileCRM HTTP response for errors.
         /// </summary>
-        /// <param name="processorType">Type of the processor.</param>
-        /// <param name="httpStatusCode">The HTTP status code.</param>
-        /// <param name="omittedHttpStatusCode">The omitted HTTP status code.</param>
-        public static void Analyze(
-            ProcessorType processorType,
-            HttpStatusCode httpStatusCode,
-            HttpStatusCode omittedHttpStatusCode = default(HttpStatusCode))
+        /// <param name="httpResponseMessage">The HTTP response message.</param>
+        public static void AnalyzeResponseForErrors(this HttpResponseMessage httpResponseMessage)
         {
+            var isSuccessStatusCode = httpResponseMessage.EnsureSuccessStatusCode();
+
+            if (!isSuccessStatusCode.)
+            {
+            }
+
             switch (httpStatusCode)
             {
                 // 200 (OK)

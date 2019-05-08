@@ -1,10 +1,9 @@
 ﻿namespace SFS.AgileCRM.Library.Logic.Internal.Mappers
 {
     using System.Collections.Generic;
-    using SFS.AgileCRM.Library.Entities;
-    using SFS.AgileCRM.Library.Entities.Contacts;
-    using SFS.AgileCRM.Library.Entities.Contacts.Internal;
-    using SFS.AgileCRM.Library.Entities.Internal;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
+    using SFS.AgileCRM.Library.Data.Static.Internal;
     using SFS.AgileCRM.Library.Logic.Internal.Helpers;
 
     /// <summary>
@@ -13,13 +12,13 @@
     internal static class ContactMapper
     {
         /// <summary>
-        /// Maps a AgileCRM domain model onto a AgileCRM entity model.
+        /// Maps a AgileCrmContactEntity onto a ContactEntityBase.
         /// </summary>
         /// <param name="agileCrmContactModel">The AgileCRM contact model.</param>
         /// <returns>
         ///   <see cref="AgileCrmContactEntity" />.
         /// </returns>
-        public static AgileCrmContactEntity ToContactEntity(this AgileCrmContactModel agileCrmContactModel)
+        public static AgileCrmContactEntity ToContactEntityBase(this AgileCrmContactRequest agileCrmContactModel)
         {
             var agileCrmPropertyEntities = new List<AgileCrmPropertyEntityBase>
             {
@@ -52,39 +51,39 @@
                 }
             };
 
-            foreach (var item in agileCrmContactModel.PhoneNumber)
+            foreach (var keyValuePair in agileCrmContactModel.Phone)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertySubTypeEntity
                     {
                         Type = PropertyType.System,
                         Name = PropertyName.Phone,
-                        Value = item.Value,
-                        SubType = item.SubType.ToPropertyValue()
+                        Value = keyValuePair.Value,
+                        SubType = keyValuePair.Key.ToPhoneTypeValue()
                     });
             }
 
-            foreach (var item in agileCrmContactModel.EmailAddress)
+            foreach (var keyValuePair in agileCrmContactModel.Email)
             {
                 agileCrmPropertyEntities.Add(
                 new AgileCrmPropertySubTypeEntity
                 {
                     Type = PropertyType.System,
                     Name = PropertyName.Email,
-                    Value = item.Value,
-                    SubType = item.SubType.ToString()
+                    Value = keyValuePair.Value,
+                    SubType = keyValuePair.Key.ToEmailTypeValue()
                 });
             }
 
-            foreach (var item in agileCrmContactModel.Website)
+            foreach (var keyValuePair in agileCrmContactModel.Website)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertySubTypeEntity
                     {
                         Type = PropertyType.System,
                         Name = PropertyName.Website,
-                        Value = item.Value,
-                        SubType = item.SubType.ToPropertyValue()
+                        Value = keyValuePair.Value,
+                        SubType = keyValuePair.Key.ToWebsiteTypeValue()
                     });
             }
 
@@ -95,37 +94,37 @@
                     Name = PropertyName.Address,
                     Value = new AgileCrmAddressEntity
                     {
-                        Address = agileCrmContactModel.AddressInformation.Address,
-                        City = agileCrmContactModel.AddressInformation.City,
-                        State = agileCrmContactModel.AddressInformation.State,
-                        Country = agileCrmContactModel.AddressInformation.Country,
-                        ZipCode = agileCrmContactModel.AddressInformation.ZipCode
+                        Address = agileCrmContactModel.Address,
+                        City = agileCrmContactModel.City,
+                        State = agileCrmContactModel.State,
+                        Country = agileCrmContactModel.Country,
+                        ZipCode = agileCrmContactModel.ZipCode
                     },
-                    SubType = agileCrmContactModel.AddressInformation.SubType.ToPropertyValue()
+                    SubType = agileCrmContactModel.AddressType.ToAddressTypeValue()
                 });
 
-            foreach (var item in agileCrmContactModel.CustomFields)
+            foreach (var keyValuePair in agileCrmContactModel.CustomFields)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertyEntity
                     {
                         Type = PropertyType.Custom,
-                        Name = item.Key,
-                        Value = item.Value
+                        Name = keyValuePair.Key,
+                        Value = keyValuePair.Value
                     });
             }
 
             var tagsCollection = new List<string>();
 
-            foreach (var item in agileCrmContactModel.Tags)
+            foreach (var stringItem in agileCrmContactModel.Tags)
             {
-                tagsCollection.Add(item);
+                tagsCollection.Add(stringItem);
             }
 
             var agileCrmServerContactEntity = new AgileCrmContactEntity
             {
-                // Id = (set in method only).
-                // CompanyId = (set in method only).
+                // Id = (set by calling method if required).
+                // CompanyId = (set by calling method if required).
                 StarValue = agileCrmContactModel.StarValue,
                 LeadScore = agileCrmContactModel.LeadScore,
                 Properties = agileCrmPropertyEntities,

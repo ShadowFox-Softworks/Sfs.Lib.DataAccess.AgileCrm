@@ -3,7 +3,8 @@
     using System;
     using System.ComponentModel;
     using System.Threading.Tasks;
-    using SFS.AgileCRM.Library.Entities.Companies;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
 
     /// <summary>
     /// DO NOT USE.
@@ -20,7 +21,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task CreateAsync(AgileCrmCompanyModel agileCrmCompanyModel);
+        Task CreateAsync(AgileCrmCompanyRequest agileCrmCompanyModel);
 
         /// <summary>
         /// Deletes an existing company via its identifier.
@@ -51,6 +52,6 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task UpdateAsync(long companyId, AgileCrmCompanyModel agileCrmCompanyModel);
+        Task UpdateAsync(long companyId, AgileCrmCompanyRequest agileCrmCompanyModel);
     }
 }

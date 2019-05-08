@@ -1,10 +1,9 @@
 ﻿namespace SFS.AgileCRM.Library.Logic.Internal.Mappers
 {
     using System.Collections.Generic;
-    using SFS.AgileCRM.Library.Entities;
-    using SFS.AgileCRM.Library.Entities.Companies;
-    using SFS.AgileCRM.Library.Entities.Companies.Internal;
-    using SFS.AgileCRM.Library.Entities.Internal;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
+    using SFS.AgileCRM.Library.Data.Static.Internal;
     using SFS.AgileCRM.Library.Logic.Internal.Helpers;
 
     /// <summary>
@@ -13,13 +12,13 @@
     internal static class CompanyMapper
     {
         /// <summary>
-        /// Maps a AgileCRM domain model onto a AgileCRM entity model.
+        /// Maps a AgileCrmCompanyEntity onto a CompanyEntityBase.
         /// </summary>
         /// <param name="agileCrmCompanyModel">The AgileCRM company model.</param>
         /// <returns>
         ///   <see cref="AgileCrmCompanyEntity" />.
         /// </returns>
-        public static AgileCrmCompanyEntity ToCompanyEntity(this AgileCrmCompanyModel agileCrmCompanyModel)
+        public static AgileCrmCompanyEntity ToCompanyEntityBase(this AgileCrmCompanyRequest agileCrmCompanyModel)
         {
             var agileCrmPropertyEntities = new List<AgileCrmPropertyEntityBase>
             {
@@ -38,39 +37,39 @@
                 }
             };
 
-            foreach (var item in agileCrmCompanyModel.PhoneNumber)
+            foreach (var keyValuePair in agileCrmCompanyModel.Phone)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertySubTypeEntity
                     {
                         Type = PropertyType.System,
                         Name = PropertyName.Phone,
-                        Value = item.Value,
-                        SubType = item.SubType.ToPropertyValue()
+                        Value = keyValuePair.Value,
+                        SubType = keyValuePair.Key.ToPhoneTypeValue()
                     });
             }
 
-            foreach (var item in agileCrmCompanyModel.EmailAddress)
+            foreach (var keyValuePair in agileCrmCompanyModel.Email)
             {
                 agileCrmPropertyEntities.Add(
                 new AgileCrmPropertySubTypeEntity
                 {
                     Type = PropertyType.System,
                     Name = PropertyName.Email,
-                    Value = item.Value,
-                    SubType = item.SubType.ToString()
+                    Value = keyValuePair.Value,
+                    SubType = keyValuePair.Key.ToEmailTypeValue()
                 });
             }
 
-            foreach (var item in agileCrmCompanyModel.Website)
+            foreach (var keyValuePair in agileCrmCompanyModel.Website)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertySubTypeEntity
                     {
                         Type = PropertyType.System,
                         Name = PropertyName.Website,
-                        Value = item.Value,
-                        SubType = item.SubType.ToPropertyValue()
+                        Value = keyValuePair.Value,
+                        SubType = keyValuePair.Key.ToWebsiteTypeValue()
                     });
             }
 
@@ -81,36 +80,36 @@
                     Name = PropertyName.Address,
                     Value = new AgileCrmAddressEntity
                     {
-                        Address = agileCrmCompanyModel.AddressInformation.Address,
-                        City = agileCrmCompanyModel.AddressInformation.City,
-                        State = agileCrmCompanyModel.AddressInformation.State,
-                        Country = agileCrmCompanyModel.AddressInformation.Country,
-                        ZipCode = agileCrmCompanyModel.AddressInformation.ZipCode
+                        Address = agileCrmCompanyModel.Address,
+                        City = agileCrmCompanyModel.City,
+                        State = agileCrmCompanyModel.State,
+                        Country = agileCrmCompanyModel.Country,
+                        ZipCode = agileCrmCompanyModel.ZipCode
                     },
-                    SubType = agileCrmCompanyModel.AddressInformation.SubType.ToPropertyValue()
+                    SubType = agileCrmCompanyModel.AddressType.ToAddressTypeValue()
                 });
 
-            foreach (var item in agileCrmCompanyModel.CustomFields)
+            foreach (var keyValuePair in agileCrmCompanyModel.CustomFields)
             {
                 agileCrmPropertyEntities.Add(
                     new AgileCrmPropertyEntity
                     {
                         Type = PropertyType.Custom,
-                        Name = item.Key,
-                        Value = item.Value
+                        Name = keyValuePair.Key,
+                        Value = keyValuePair.Value
                     });
             }
 
             var tagsCollection = new List<string>();
 
-            foreach (var item in agileCrmCompanyModel.Tags)
+            foreach (var stringItem in agileCrmCompanyModel.Tags)
             {
-                tagsCollection.Add(item);
+                tagsCollection.Add(stringItem);
             }
 
             var agileCrmServerCompanyEntity = new AgileCrmCompanyEntity
             {
-                // Id = (set in method only).
+                // Id = (set by calling method if required).
                 LeadScore = agileCrmCompanyModel.LeadScore,
                 StarValue = agileCrmCompanyModel.StarValue,
                 Properties = agileCrmPropertyEntities,

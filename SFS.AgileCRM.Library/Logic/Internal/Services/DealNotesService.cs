@@ -2,13 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using SFS.AgileCRM.Library.Entities.Internal;
-    using SFS.AgileCRM.Library.Entities.Notes;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
+    using SFS.AgileCRM.Library.Data.Static.Internal;
     using SFS.AgileCRM.Library.Interfaces.Internal;
     using SFS.AgileCRM.Library.Interfaces.Services;
     using SFS.AgileCRM.Library.Logic.Internal.Helpers;
@@ -36,56 +35,55 @@
         private readonly ILogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DealNotesService"/> class.
+        /// Initializes a new instance of the <see cref="DealNotesService" /> class.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="httpClient">The HTTP client.</param>
+        /// <param name="logger">The logger.</param>
         public DealNotesService(
-            ILoggerFactory loggerFactory,
-            IHttpClient httpClient)
+            IHttpClient httpClient,
+            ILogger logger)
         {
-            loggerFactory.EnsureNotNull();
             httpClient.EnsureNotNull();
 
-            this.logger = loggerFactory.CreateLogger<AgileCrm>();
             this.httpClient = httpClient;
+
+            if (logger != null)
+            {
+                this.logger = logger;
+            }
         }
 
         /// <inheritdoc />
-        public async Task CreateAsync(long dealId, AgileCrmNoteModel agileCrmNoteModel)
+        public async Task CreateAsync(long dealId, AgileCrmNoteRequest agileCrmNoteModel)
         {
             const string MethodName = nameof(this.CreateAsync);
             this.logger.LogMethodStart(ClassName, MethodName);
 
-            var noteId = default(string);
+            var noteId = default(long);
             try
             {
-                // Validate argument entity
-                var validationContext = new ValidationContext(agileCrmNoteModel);
+                // Validate argument object
+                agileCrmNoteModel.ValidateModel();
 
-                Validator.ValidateObject(agileCrmNoteModel, validationContext, true);
+                // Serialize object to JSON
+                var dealNoteEntityBase = agileCrmNoteModel.ToDealNoteEntityBase();
 
-                // Prepare entity for transmission
-                var agileCrmDealNoteEntity = agileCrmNoteModel.ToDealNoteEntity();
+                dealNoteEntityBase.DealId = new List<string> { dealId.ToString() };
 
-                agileCrmDealNoteEntity.DealId = new List<string> { dealId.ToString() };
+                var stringContent = dealNoteEntityBase.ToStringContent();
 
+                // Send JSON to server
                 const string Uri = "opportunity/deals/notes";
 
-                var serializedEntity = JsonConvert.SerializeObject(agileCrmDealNoteEntity, ImplementationFields.SerializerSettings);
-
-                var stringContent = new StringContent(serializedEntity, ImplementationFields.EncodingType, ImplementationFields.MediaType);
-
-                // Send prepared entity to server
                 var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
+                httpResponseMessage.EnsureSuccessStatusCode();
 
                 // Retrieve identifier for logging
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                noteId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(string) }).id;
+                noteId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(long) }).id;
             }
             catch (Exception exception)
             {
@@ -93,17 +91,55 @@
                 throw;
             }
 
-            this.logger.LogCreated($"Deal note ({noteId})");
+            this.logger.LogCreated(ServiceType.Note, noteId);
+            this.logger.LogMethodEnd(ClassName, MethodName);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteAllAsync(long dealId)
+        {
+            const string MethodName = nameof(this.DeleteAllAsync);
+            this.logger.LogMethodStart(ClassName, MethodName);
+
+            var noteId = default(long);
+            try
+            {
+                // Create object
+                var dealIdEntity = new { id = dealId };
+
+                // Serialize object to JSON
+                var stringContent = dealIdEntity.ToStringContent();
+
+                // Send JSON to server
+                const string Uri = "contacts/notes/bulk";
+
+                var httpResponseMessage = await this.httpClient.PostAsync(Uri, stringContent).ConfigureAwait(false);
+
+                // Analyze server response for errors
+                httpResponseMessage.EnsureSuccessStatusCode();
+
+                // Retrieve identifier for logging
+                var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                noteId = JsonConvert.DeserializeAnonymousType(httpContentAsString, new { id = default(long) }).id;
+            }
+            catch (Exception exception)
+            {
+                this.logger.LogException(ClassName, MethodName, exception);
+                throw;
+            }
+
+            this.logger.LogDeleted(ServiceType.Note, noteId);
             this.logger.LogMethodEnd(ClassName, MethodName);
         }
 
         /// <inheritdoc />
         public async Task<IList<AgileCrmDealNoteEntity>> GetAllAsync(long dealId)
         {
-            const string MethodName = nameof(this.GetAsync);
+            const string MethodName = nameof(this.GetAllAsync);
             this.logger.LogMethodStart(ClassName, MethodName);
 
-            IList<AgileCrmDealNoteEntity> agileCrmDealNoteEntities;
+            var agileCrmDealNoteEntities = default(IList<AgileCrmDealNoteEntity>);
             try
             {
                 // Send request to server
@@ -112,12 +148,12 @@
                 var httpResponseMessage = await this.httpClient.GetAsync(uri).ConfigureAwait(false);
 
                 // Analyze server response for errors
-                ResponseAnalyzer.Analyze(ProcessorType.Notes, httpResponseMessage.StatusCode);
+                httpResponseMessage.EnsureSuccessStatusCode();
 
                 // Return data retrieved from server
                 var httpContentAsString = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                agileCrmDealNoteEntities = JsonConvert.DeserializeObject<List<AgileCrmDealNoteEntity>>(httpContentAsString, ImplementationFields.SerializerSettings);
+                agileCrmDealNoteEntities = httpContentAsString.DeserializeJson<List<AgileCrmDealNoteEntity>>();
             }
             catch (Exception exception)
             {
@@ -127,7 +163,7 @@
 
             foreach (var agileCrmDealNoteEntity in agileCrmDealNoteEntities)
             {
-                this.logger.LogRetrieved($"Deal note ({agileCrmDealNoteEntity.Id})");
+                this.logger.LogRetrieved(ServiceType.Note, agileCrmDealNoteEntity.Id);
             }
 
             this.logger.LogMethodEnd(ClassName, MethodName);

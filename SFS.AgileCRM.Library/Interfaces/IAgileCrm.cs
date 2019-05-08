@@ -13,23 +13,23 @@
         ICompaniesService Companies { get; }
 
         /// <summary>
-        /// Gets the contact notes.
-        /// </summary>
-        IContactNotesService ContactNotes { get; }
-
-        /// <summary>
         /// Gets the contacts.
         /// </summary>
         IContactsService Contacts { get; }
 
         /// <summary>
-        /// Gets the deal notes.
-        /// </summary>
-        IDealNotesService DealNotes { get; }
-
-        /// <summary>
         /// Gets the deals.
         /// </summary>
         IDealsService Deals { get; }
+
+        /// <summary>
+        /// Gets the notes.
+        /// </summary>
+        INotesService Notes { get; }
+
+        /// <summary>
+        /// Gets the tasks.
+        /// </summary>
+        ITasksService Tasks { get; }
     }
 }

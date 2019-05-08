@@ -3,7 +3,8 @@
     using System;
     using System.ComponentModel;
     using System.Threading.Tasks;
-    using SFS.AgileCRM.Library.Entities.Contacts;
+    using SFS.AgileCRM.Library.Data.Requests;
+    using SFS.AgileCRM.Library.Data.Responses;
 
     /// <summary>
     /// DO NOT USE.
@@ -20,7 +21,7 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task CreateAsync(AgileCrmContactModel agileCrmContactModel);
+        Task CreateAsync(AgileCrmContactRequest agileCrmContactModel);
 
         /// <summary>
         /// Deletes an existing contact via their identifier.
@@ -51,6 +52,6 @@
         ///   <see cref="Task" />.
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        Task UpdateAsync(long contactId, AgileCrmContactModel agileCrmContactModel);
+        Task UpdateAsync(long contactId, AgileCrmContactRequest agileCrmContactModel);
     }
 }

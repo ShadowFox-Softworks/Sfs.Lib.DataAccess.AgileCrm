@@ -2,6 +2,8 @@
 
 [assembly: SuppressMessage(null, "CS0612:MemberIsObsolete")]
 [assembly: SuppressMessage(null, "CS0618:MemberIsObsolete")]
+[assembly: SuppressMessage(null, "CC0014:UseTernaryOperator")]
+[assembly: SuppressMessage(null, "CC0037:RemoveCommentedCode")]
 [assembly: SuppressMessage(null, "CC0045:ConvertRegularStringIntoVerbatimString")]
 [assembly: SuppressMessage(null, "CC0046:ConvertVerbatimStringIntoRegularString")]
 [assembly: SuppressMessage(null, "CC0047:UsePrivateSetForAutomaticProperties")]
